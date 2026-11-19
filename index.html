@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bambe Aine Chris</title>
+    <meta
+      name="description"
+      content="Portfolio of Bambe Aine Chris, a Student Software Developer and Aspiring Backend Developer at Intango TSS in Rwanda. Explore SAMS, Node.js APIs, and projects."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Bambe Aine Chris" />
+    <meta name="theme-color" content="#04060f" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Bambe Aine Chris — Student Software Developer & Aspiring Backend Developer" />
+    <meta
+      property="og:description"
+      content="Student Software Developer at Intango TSS (L4 SOD) in Busanza, Nyarutarama, Rwanda. Building SAMS and backend-focused web software."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bambe Aine Chris" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Bambe Aine Chris — Student Software Developer & Aspiring Backend Developer" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bambe Aine Chris — Student Software Developer" />
+    <meta
+      name="twitter:description"
+      content="Aspiring Backend Developer studying L4 Software Development at Intango TSS in Rwanda. Explore SAMS and backend engineering projects."
+    />
+    <meta name="twitter:image" content="/og-image.jpg" />
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "#website",
+            "name": "Bambe Aine Chris",
+            "description": "Personal software developer portfolio of Bambe Aine Chris, Student Software Developer and Aspiring Backend Developer in Rwanda.",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "EducationalOrganization",
+            "@id": "#intango-tss",
+            "name": "Intango TSS",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Busanza, Nyarutarama",
+              "addressLocality": "Kigali",
+              "addressCountry": "RW"
+            },
+            "parentOrganization": {
+              "@type": "Organization",
+              "name": "CLA"
+            }
+          },
+          {
+            "@type": "Person",
+            "@id": "#person",
+            "name": "Bambe Aine Chris",
+            "alternateName": ["BAMBE Aine Chris", "Aine Chris"],
+            "jobTitle": "Student Software Developer",
+            "description": "Student Software Developer (L4 SOD) and Aspiring Backend Developer building SAMS, Express.js APIs, and practical web software.",
+            "email": "mailto:ainechrisb@gmail.com",
+            "alumniOf": { "@id": "#intango-tss" },
+            "knowsAbout": [
+              "HTML5",
+              "CSS3",
+              "JavaScript",
+              "Node.js",
+              "Express.js",
+              "MySQL",
+              "Git",
+              "GitHub",
+              "Backend Development"
+            ],
+            "sameAs": [
+              "https://github.com/Ainechris",
+              "https://www.youtube.com/@VazukoYT",
+              "https://www.instagram.com/__aine_.23/"
+            ]
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "#profile-page",
+            "name": "Bambe Aine Chris Portfolio",
+            "isPartOf": { "@id": "#website" },
+            "mainEntity": { "@id": "#person" }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body class="bg-[#04060f] text-[#f3f6ff] antialiased selection:bg-[#5df0a8]/35 selection:text-[#f3f6ff]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
