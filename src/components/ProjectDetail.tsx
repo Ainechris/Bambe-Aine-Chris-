@@ -10,6 +10,7 @@ import {
   Maximize2,
   X,
 } from 'lucide-react';
+import { applyProjectSeoHead } from '../App.tsx';
 import {
   type ProjectRecord,
   formatDisplayDate,
@@ -89,9 +90,12 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
         if ('notFound' in detailRes && detailRes.notFound) {
           setProject(null);
           setNotFound(true);
+          applyProjectSeoHead(null, true);
         } else {
-          setProject(detailRes.project ?? null);
-          setNotFound(!detailRes.project);
+          const loaded = detailRes.project ?? null;
+          setProject(loaded);
+          setNotFound(!loaded);
+          applyProjectSeoHead(loaded, !loaded);
         }
         const safeList = Array.isArray(listRes.projects)
           ? listRes.projects.filter(
@@ -101,7 +105,10 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
         setAllProjects(safeList);
       })
       .catch(() => {
-        if (active) setNotFound(true);
+        if (active) {
+          setNotFound(true);
+          applyProjectSeoHead(null, true);
+        }
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -232,7 +239,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
   return (
     <article aria-labelledby="project-detail-title" className="w-full">
       {/* Midnight Ink Exhibition Header */}
-      <header className="w-full bg-[#0B1320] text-[#F2EFE8] border-b border-[#1F2A44]">
+      <header className="w-full bg-[#0B1320] dark:bg-[#070C16] text-[#F2EFE8] border-b border-[#1F2A44] dark:border-[#1D2A44]">
         <div className="max-w-[1220px] mx-auto px-5 sm:px-8 pt-10 sm:pt-14 pb-16 sm:pb-20">
           <nav
             aria-label="Breadcrumb"
@@ -358,13 +365,13 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
       </header>
 
       {/* Tactile Linen Case Study Breakdown */}
-      <section className="w-full bg-[#F2EFE8] text-[#0B1320]">
+      <section className="w-full bg-[#F2EFE8] dark:bg-[#0B1320] text-[#0B1320] dark:text-[#F2EFE8] transition-colors duration-200">
         <div className="max-w-[1220px] mx-auto px-5 sm:px-8 py-16 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             {/* Sticky Left Rail: Slate Indigo Technical Specifications */}
             <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
               <Reveal>
-                <div className="rounded-2xl bg-[#0B1320] text-[#F2EFE8] border border-[#1F2A44] p-6 sm:p-7 shadow-[0_22px_44px_-24px_rgba(11,19,32,0.52)]">
+                <div className="rounded-2xl bg-[#0B1320] dark:bg-[#111B30] text-[#F2EFE8] border border-[#1F2A44] dark:border-[#29395A] p-6 sm:p-7 shadow-[0_22px_44px_-24px_rgba(11,19,32,0.52)]">
                   <div className="flex items-center justify-between pb-4 border-b border-[#1F2A44]">
                     <span className="font-mono-tech text-xs text-[#D68C76]">
                       Technical Specifications
@@ -448,14 +455,14 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
             <div className="lg:col-span-8 space-y-10">
               {caseStudySections.map((sec, idx) => (
                 <Reveal key={sec.key} delayMs={Math.min(idx * 75, 200)}>
-                  <section className="rounded-2xl bg-[#FAF8F4] border border-[#C7B8A6]/75 p-6 sm:p-8">
-                    <p className="font-mono-tech text-xs text-[#9A4F3A] font-semibold tabular-nums">
+                  <section className="rounded-2xl bg-[#FAF8F4] dark:bg-[#131D33] border border-[#C7B8A6]/75 dark:border-[#2A3958] p-6 sm:p-8 transition-colors duration-200">
+                    <p className="font-mono-tech text-xs text-[#9A4F3A] dark:text-[#D68C76] font-semibold tabular-nums">
                       0{idx + 1}.
                     </p>
-                    <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#0B1320]">
+                    <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#0B1320] dark:text-[#F2EFE8]">
                       {sec.title}
                     </h2>
-                    <p className="mt-4 text-sm sm:text-base text-[#1F2A44] leading-[1.8] whitespace-pre-line">
+                    <p className="mt-4 text-sm sm:text-base text-[#1F2A44] dark:text-[#DED8CE] leading-[1.8] whitespace-pre-line">
                       {sec.content}
                     </p>
                   </section>
@@ -464,20 +471,20 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
 
               {project.keyFeatures.length > 0 && (
                 <Reveal delayMs={150}>
-                  <section className="rounded-2xl bg-[#FAF8F4] border border-[#C7B8A6]/75 p-6 sm:p-8">
-                    <p className="font-mono-tech text-xs text-[#9A4F3A] font-semibold tabular-nums">
+                  <section className="rounded-2xl bg-[#FAF8F4] dark:bg-[#131D33] border border-[#C7B8A6]/75 dark:border-[#2A3958] p-6 sm:p-8 transition-colors duration-200">
+                    <p className="font-mono-tech text-xs text-[#9A4F3A] dark:text-[#D68C76] font-semibold tabular-nums">
                       0{caseStudySections.length + 1}.
                     </p>
-                    <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#0B1320]">
+                    <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#0B1320] dark:text-[#F2EFE8]">
                       Important Features
                     </h2>
-                    <ol className="mt-5 divide-y divide-[#C7B8A6]/45">
+                    <ol className="mt-5 divide-y divide-[#C7B8A6]/45 dark:divide-[#273552]">
                       {project.keyFeatures.map((feat, idx) => (
                         <li key={`${idx}-${feat}`} className="py-3.5 flex items-baseline gap-4">
-                          <span className="font-mono-tech text-xs font-semibold text-[#9A4F3A] tabular-nums shrink-0">
+                          <span className="font-mono-tech text-xs font-semibold text-[#9A4F3A] dark:text-[#D68C76] tabular-nums shrink-0">
                             {String(idx + 1).padStart(2, '0')}.
                           </span>
-                          <span className="text-sm sm:text-base text-[#0B1320] leading-relaxed">
+                          <span className="text-sm sm:text-base text-[#0B1320] dark:text-[#F2EFE8] leading-relaxed">
                             {feat}
                           </span>
                         </li>
@@ -489,7 +496,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
 
               {project.developmentProcess && (
                 <Reveal delayMs={150}>
-                  <section className="rounded-2xl bg-[#1F2A44] text-[#F2EFE8] border border-[#C7B8A6]/25 p-6 sm:p-8">
+                  <section className="rounded-2xl bg-[#1F2A44] dark:bg-[#16223A] text-[#F2EFE8] border border-[#C7B8A6]/25 dark:border-[#2F4063] p-6 sm:p-8">
                     <p className="font-mono-tech text-xs text-[#D68C76] font-medium tabular-nums">
                       0{caseStudySections.length + (project.keyFeatures.length > 0 ? 2 : 1)}.
                     </p>
@@ -507,10 +514,10 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
                 <Reveal delayMs={150}>
                   <section className="space-y-5">
                     <div>
-                      <p className="font-mono-tech text-xs text-[#9A4F3A] font-semibold">
+                      <p className="font-mono-tech text-xs text-[#9A4F3A] dark:text-[#D68C76] font-semibold">
                         Project Screenshots
                       </p>
-                      <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-[#0B1320]">
+                      <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-[#0B1320] dark:text-[#F2EFE8]">
                         Additional interface &amp; workflow captures
                       </h2>
                     </div>
@@ -525,7 +532,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
                             type="button"
                             onClick={() => setLightboxIndex(lbIndex >= 0 ? lbIndex : 0)}
                             aria-label={`Open screenshot ${idx + 1} of ${project.title}`}
-                            className={`group relative rounded-2xl bg-[#FAF8F4] border border-[#C7B8A6]/75 hover:border-[#B46A55] overflow-hidden cursor-pointer text-left transition-all duration-200 hover:-translate-y-1 ${
+                            className={`group relative rounded-2xl bg-[#FAF8F4] dark:bg-[#131D33] border border-[#C7B8A6]/75 dark:border-[#2A3958] hover:border-[#B46A55] dark:hover:border-[#D68C76] overflow-hidden cursor-pointer text-left transition-all duration-200 hover:-translate-y-1 ${
                               idx === 0 && project.screenshots.length === 3 ? 'sm:col-span-2' : ''
                             }`}
                           >
@@ -547,11 +554,11 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                               />
                             </div>
-                            <span className="px-4 py-2.5 border-t border-[#C7B8A6]/55 flex items-center justify-between text-xs text-[#4A5264]">
+                            <span className="px-4 py-2.5 border-t border-[#C7B8A6]/55 dark:border-[#273552] flex items-center justify-between text-xs text-[#4A5264] dark:text-[#C7B8A6]">
                               <span className="font-mono-tech tabular-nums">
                                 Capture {String(idx + 1).padStart(2, '0')}
                               </span>
-                              <span className="inline-flex items-center gap-1 font-medium text-[#9A4F3A]">
+                              <span className="inline-flex items-center gap-1 font-medium text-[#9A4F3A] dark:text-[#D68C76]">
                                 <span>Zoom</span>
                                 <Maximize2 className="w-3.5 h-3.5" aria-hidden="true" />
                               </span>
@@ -567,14 +574,14 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
           </div>
 
           {/* Next Project / Back to Selected Work Strip */}
-          <div className="mt-16 pt-10 border-t border-[#C7B8A6]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="mt-16 pt-10 border-t border-[#C7B8A6]/60 dark:border-[#233252] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <button
               type="button"
               onClick={onBackToWork}
-              className="group inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-lg bg-[#FAF8F4] hover:bg-[#0B1320] hover:text-[#F2EFE8] border border-[#C7B8A6] text-sm font-medium text-[#0B1320] transition-all cursor-pointer self-start"
+              className="group inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-lg bg-[#FAF8F4] dark:bg-[#131D33] hover:bg-[#0B1320] dark:hover:bg-[#B46A55] hover:text-[#F2EFE8] border border-[#C7B8A6] dark:border-[#2E3F61] text-sm font-medium text-[#0B1320] dark:text-[#F2EFE8] transition-all cursor-pointer self-start"
             >
               <ArrowLeft
-                className="w-4 h-4 text-[#B46A55] group-hover:text-[#D68C76] transition-transform duration-150 group-hover:-translate-x-0.5"
+                className="w-4 h-4 text-[#B46A55] dark:text-[#D68C76] group-hover:text-[#F2EFE8] transition-transform duration-150 group-hover:-translate-x-0.5"
                 aria-hidden="true"
               />
               <span>All Selected Work</span>
@@ -588,7 +595,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
                   e.preventDefault();
                   onSelectProject(nextProject.slug);
                 }}
-                className="group inline-flex items-center gap-3 min-h-[44px] px-5 py-3 rounded-xl bg-[#0B1320] hover:bg-[#B46A55] text-[#F2EFE8] transition-colors self-start sm:self-auto"
+                className="group inline-flex items-center gap-3 min-h-[44px] px-5 py-3 rounded-xl bg-[#0B1320] dark:bg-[#16223A] hover:bg-[#B46A55] dark:hover:bg-[#B46A55] border border-transparent dark:border-[#2F4063] text-[#F2EFE8] transition-colors self-start sm:self-auto"
               >
                 <div className="text-left">
                   <span className="block font-mono-tech text-[11px] text-[#D68C76] group-hover:text-[#F2EFE8]/85">

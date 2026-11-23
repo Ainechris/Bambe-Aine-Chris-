@@ -13,6 +13,8 @@ export interface SeoRouteMeta {
   label: string;
   title: string;
   description: string;
+  keywords: string;
+  ogType: 'profile' | 'website';
   priority: string;
   changefreq: string;
 }
@@ -45,14 +47,19 @@ export const PERSON_IDENTITY = {
   ogImagePath: '/og-image.jpg',
 } as const;
 
+export const SITE_KEYWORDS =
+  'BAMBE Aine Chris, Aine Chris, Ainechris, Student Software Developer, Backend Developer Rwanda, Intango TSS, Busaanza, JavaScript, Node.js, Express.js, MySQL, Software Engineering Portfolio';
+
 export const PUBLIC_ROUTES: SeoRouteMeta[] = [
   {
     path: '/',
     sectionId: 'home',
     label: 'Home',
-    title: 'BAMBE Aine Chris (Ainechris) | Student Software Developer',
+    title: 'BAMBE Aine Chris (Ainechris) — Software Developer',
     description:
-      'Portfolio of BAMBE Aine Chris (Aine Chris / Ainechris), a Level 4 Software Development student at Intango TSS in Busaanza, Rwanda focused on backend engineering with JavaScript, Node.js, Express.js, and MySQL.',
+      'Portfolio of BAMBE Aine Chris (Ainechris), Level 4 Software Development student at Intango TSS in Busaanza, Rwanda building Node.js, Express, and MySQL backends.',
+    keywords: SITE_KEYWORDS,
+    ogType: 'profile',
     priority: '1.0',
     changefreq: 'weekly',
   },
@@ -60,9 +67,11 @@ export const PUBLIC_ROUTES: SeoRouteMeta[] = [
     path: '/about',
     sectionId: 'about',
     label: 'About',
-    title: 'About BAMBE Aine Chris | Intango TSS Software Development Student',
+    title: 'About BAMBE Aine Chris | Intango TSS Rwanda',
     description:
-      'Learn about BAMBE Aine Chris (Bambe Aine Chris / Ainechris), a Level 4 Software Development student at Intango TSS in Busaanza, Rwanda aiming to specialize in backend engineering.',
+      'About BAMBE Aine Chris (Ainechris), a Level 4 Software Development student at Intango TSS in Busaanza, Rwanda specializing in practical backend engineering.',
+    keywords: `${SITE_KEYWORDS}, Intango TSS Busaanza, CLA Nyarutarama, Class of 2028`,
+    ogType: 'profile',
     priority: '0.9',
     changefreq: 'monthly',
   },
@@ -70,9 +79,11 @@ export const PUBLIC_ROUTES: SeoRouteMeta[] = [
     path: '/process',
     sectionId: 'process',
     label: 'Process',
-    title: 'How BAMBE Aine Chris Works | Software Development Process',
+    title: 'Development Process | BAMBE Aine Chris',
     description:
-      'Explore how BAMBE Aine Chris approaches software engineering and problem-solving across five stages: Discover, Explore, Build, Refine, and Create.',
+      'Explore how BAMBE Aine Chris approaches backend and web engineering across five stages: Discover, Explore, Build, Refine, and Create.',
+    keywords: `${SITE_KEYWORDS}, Software Engineering Workflow, REST API Architecture`,
+    ogType: 'website',
     priority: '0.7',
     changefreq: 'monthly',
   },
@@ -80,9 +91,11 @@ export const PUBLIC_ROUTES: SeoRouteMeta[] = [
     path: '/work',
     sectionId: 'work',
     label: 'Work',
-    title: 'Selected Work & Projects | BAMBE Aine Chris (Ainechris)',
+    title: 'Selected Work & Projects | BAMBE Aine Chris',
     description:
-      'Explore software development projects, backend builds, and public GitHub repositories by BAMBE Aine Chris in Busaanza, Rwanda.',
+      'Explore software projects, backend builds, and GitHub repositories by BAMBE Aine Chris (Ainechris), student software developer in Busaanza, Rwanda.',
+    keywords: `${SITE_KEYWORDS}, Software Projects, GitHub Repositories`,
+    ogType: 'website',
     priority: '0.9',
     changefreq: 'weekly',
   },
@@ -90,9 +103,11 @@ export const PUBLIC_ROUTES: SeoRouteMeta[] = [
     path: '/skills',
     sectionId: 'skills',
     label: 'Skills',
-    title: 'Technical Stack & Skills | BAMBE Aine Chris (Ainechris)',
+    title: 'Technical Stack & Skills | BAMBE Aine Chris',
     description:
-      'Technical stack of BAMBE Aine Chris including JavaScript, Node.js, Express.js, HTML, CSS, MySQL, database fundamentals, Git, and GitHub.',
+      'Core technical stack of BAMBE Aine Chris: JavaScript, Node.js, Express.js, MySQL, database fundamentals, HTML5, CSS3, Git, and GitHub.',
+    keywords: `${SITE_KEYWORDS}, HTML5, CSS3, Git, GitHub, SQL`,
+    ogType: 'website',
     priority: '0.8',
     changefreq: 'monthly',
   },
@@ -100,9 +115,11 @@ export const PUBLIC_ROUTES: SeoRouteMeta[] = [
     path: '/certificates',
     sectionId: 'certificates',
     label: 'Certificates',
-    title: 'Certificates & Learning Milestones | BAMBE Aine Chris',
+    title: 'Certificates & Credentials | BAMBE Aine Chris',
     description:
-      'Documented courses, credentials, and learning milestones published by software development student BAMBE Aine Chris.',
+      'Verified technical certificates, completed programs, and software development learning milestones published by BAMBE Aine Chris.',
+    keywords: `${SITE_KEYWORDS}, Certificates, Credentials, Learning Milestones`,
+    ogType: 'website',
     priority: '0.8',
     changefreq: 'weekly',
   },
@@ -110,9 +127,11 @@ export const PUBLIC_ROUTES: SeoRouteMeta[] = [
     path: '/contact',
     sectionId: 'contact',
     label: 'Contact',
-    title: 'Contact BAMBE Aine Chris | Internships, Projects & Collaborations',
+    title: 'Contact BAMBE Aine Chris | Internships & Roles',
     description:
-      'Connect with BAMBE Aine Chris (Aine Chris) for internships, software development roles, scholarships, freelance projects, and technical collaborations.',
+      'Contact BAMBE Aine Chris (Ainechris) for internships, junior software roles, scholarships, freelance builds, and developer collaborations.',
+    keywords: `${SITE_KEYWORDS}, Software Internship Rwanda, Backend Collaboration`,
+    ogType: 'website',
     priority: '0.8',
     changefreq: 'monthly',
   },
@@ -135,6 +154,14 @@ export function findPublicRoute(pathname: string): SeoRouteMeta | null {
   return PUBLIC_ROUTES.find((r) => r.path === normalized) ?? null;
 }
 
+export function resolveAbsoluteAssetUrl(origin: string, assetPath: string | null | undefined): string {
+  const cleanOrigin = origin.replace(/\/+$/, '');
+  if (!assetPath) return `${cleanOrigin}${PERSON_IDENTITY.ogImagePath}`;
+  if (/^https?:\/\//i.test(assetPath)) return assetPath;
+  const normalizedPath = assetPath.startsWith('/') ? assetPath : `/${assetPath}`;
+  return `${cleanOrigin}${normalizedPath}`;
+}
+
 export function buildJsonLdGraph(origin: string, currentPath: string) {
   const cleanOrigin = origin.replace(/\/+$/, '');
   const normalizedPath = normalizePathname(currentPath);
@@ -144,6 +171,7 @@ export function buildJsonLdGraph(origin: string, currentPath: string) {
   const websiteId = `${cleanOrigin}/#website`;
 
   const routeMeta = findPublicRoute(normalizedPath) ?? PUBLIC_ROUTES[0];
+  const isProfilePage = routeMeta.ogType === 'profile';
 
   const graph: Array<Record<string, unknown>> = [
     {
@@ -190,8 +218,8 @@ export function buildJsonLdGraph(origin: string, currentPath: string) {
         'MySQL',
         'Database Fundamentals',
         'Web Development',
-        'HTML',
-        'CSS',
+        'HTML5',
+        'CSS3',
         'Git',
         'GitHub',
         'Problem Solving',
@@ -207,19 +235,23 @@ export function buildJsonLdGraph(origin: string, currentPath: string) {
       description: PUBLIC_ROUTES[0].description,
       inLanguage: 'en',
       publisher: { '@id': personId },
+      creator: { '@id': personId },
     },
     {
-      '@type': 'ProfilePage',
-      '@id': `${pageUrl}#profilepage`,
+      '@type': isProfilePage ? 'ProfilePage' : normalizedPath === '/work' || normalizedPath === '/certificates' ? 'CollectionPage' : 'WebPage',
+      '@id': `${pageUrl}#webpage`,
       url: pageUrl,
       name: routeMeta.title,
       description: routeMeta.description,
+      inLanguage: 'en',
       isPartOf: { '@id': websiteId },
       about: { '@id': personId },
       mainEntity: { '@id': personId },
       primaryImageOfPage: {
         '@type': 'ImageObject',
         url: imageUrl,
+        width: 1200,
+        height: 630,
       },
     },
   ];
@@ -266,15 +298,20 @@ export function buildProjectJsonLdGraph(
 ) {
   const cleanOrigin = origin.replace(/\/+$/, '');
   const projectUrl = `${cleanOrigin}/work/${encodeURIComponent(project.slug)}`;
-  const imageUrl = project.imageUrl
-    ? `${cleanOrigin}${project.imageUrl}`
-    : `${cleanOrigin}${PERSON_IDENTITY.ogImagePath}`;
+  const imageUrl = resolveAbsoluteAssetUrl(cleanOrigin, project.imageUrl);
   const personId = `${cleanOrigin}/#person`;
   const websiteId = `${cleanOrigin}/#website`;
 
   return {
     '@context': 'https://schema.org',
     '@graph': [
+      {
+        '@type': 'Person',
+        '@id': personId,
+        name: PERSON_IDENTITY.fullName,
+        url: cleanOrigin,
+        sameAs: [PERSON_IDENTITY.githubUrl, PERSON_IDENTITY.instagramUrl],
+      },
       {
         '@type': 'SoftwareSourceCode',
         '@id': `${projectUrl}#software`,
@@ -294,8 +331,13 @@ export function buildProjectJsonLdGraph(
         url: projectUrl,
         name: `${project.title} | BAMBE Aine Chris`,
         description: project.description,
+        inLanguage: 'en',
         isPartOf: { '@id': websiteId },
         mainEntity: { '@id': `${projectUrl}#software` },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          url: imageUrl,
+        },
       },
       {
         '@type': 'BreadcrumbList',

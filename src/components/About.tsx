@@ -98,14 +98,14 @@ const JOURNEY_CARDS: JourneyCardData[] = [
     theme: 'sand',
     graphic: (
       <svg viewBox="0 0 88 56" fill="none" className="w-16 h-11" aria-hidden="true">
-        <rect x="4" y="18" width="20" height="20" rx="4" stroke="#0B1320" strokeWidth="1.6" />
+        <rect x="4" y="18" width="20" height="20" rx="4" className="stroke-[#0B1320] dark:stroke-[#C7B8A6]" strokeWidth="1.6" />
         <rect
           x="34"
           y="8"
           width="20"
           height="16"
           rx="4"
-          stroke="#1F2A44"
+          className="stroke-[#1F2A44] dark:stroke-[#D68C76]"
           strokeOpacity="0.85"
           strokeWidth="1.5"
         />
@@ -115,7 +115,7 @@ const JOURNEY_CARDS: JourneyCardData[] = [
           width="20"
           height="16"
           rx="4"
-          stroke="#1F2A44"
+          className="stroke-[#1F2A44] dark:stroke-[#D68C76]"
           strokeOpacity="0.85"
           strokeWidth="1.5"
         />
@@ -127,10 +127,10 @@ const JOURNEY_CARDS: JourneyCardData[] = [
           rx="4"
           fill="#B46A55"
           fillOpacity="0.22"
-          stroke="#7A3725"
+          className="stroke-[#7A3725] dark:stroke-[#D68C76]"
           strokeWidth="1.6"
         />
-        <path d="M24 28H34M54 16H59V28H64M54 40H59V28" stroke="#0B1320" strokeWidth="1.5" />
+        <path d="M24 28H34M54 16H59V28H64M54 40H59V28" className="stroke-[#0B1320] dark:stroke-[#C7B8A6]" strokeWidth="1.5" />
       </svg>
     ),
   },
@@ -203,25 +203,25 @@ function isDarkCardTheme(theme: JourneyTheme): boolean {
 function getCardSurfaceClasses(theme: JourneyTheme, interactive: boolean) {
   switch (theme) {
     case 'ink':
-      return `bg-[#121B2E] text-[#F2EFE8] border-[#C7B8A6]/30 shadow-[0_28px_56px_-26px_rgba(4,7,14,0.8)] ${
+      return `bg-[#121B2E] dark:bg-[#0F182B] text-[#F2EFE8] border-[#C7B8A6]/30 dark:border-[#2C3D60] shadow-[0_28px_56px_-26px_rgba(4,7,14,0.8)] ${
         interactive ? 'hover:border-[#D68C76]/85' : ''
       }`;
     case 'navy':
-      return `bg-[#1F2A44] text-[#F2EFE8] border-[#C7B8A6]/35 shadow-[0_26px_52px_-24px_rgba(4,7,14,0.68)] ${
+      return `bg-[#1F2A44] dark:bg-[#17233D] text-[#F2EFE8] border-[#C7B8A6]/35 dark:border-[#31446A] shadow-[0_26px_52px_-24px_rgba(4,7,14,0.68)] ${
         interactive ? 'hover:border-[#D68C76]/85' : ''
       }`;
     case 'terracotta-navy':
-      return `bg-[#192238] text-[#F2EFE8] border-[#B46A55]/50 shadow-[0_26px_52px_-24px_rgba(4,7,14,0.65)] ${
+      return `bg-[#192238] dark:bg-[#141D32] text-[#F2EFE8] border-[#B46A55]/50 shadow-[0_26px_52px_-24px_rgba(4,7,14,0.65)] ${
         interactive ? 'hover:border-[#D68C76]' : ''
       }`;
     case 'sand':
-      return `bg-[#C7B8A6] text-[#0B1320] border-[#A89680] shadow-[0_24px_48px_-24px_rgba(4,7,14,0.45)] ${
-        interactive ? 'hover:border-[#0B1320]' : ''
+      return `bg-[#C7B8A6] dark:bg-[#231B1A] text-[#0B1320] dark:text-[#F2EFE8] border-[#A89680] dark:border-[#B46A55]/45 shadow-[0_24px_48px_-24px_rgba(4,7,14,0.45)] ${
+        interactive ? 'hover:border-[#0B1320] dark:hover:border-[#D68C76]' : ''
       }`;
     case 'linen':
     default:
-      return `bg-[#F2EFE8] text-[#0B1320] border-[#C7B8A6] shadow-[0_24px_48px_-24px_rgba(4,7,14,0.42)] ${
-        interactive ? 'hover:border-[#B46A55]' : ''
+      return `bg-[#F2EFE8] dark:bg-[#152036] text-[#0B1320] dark:text-[#F2EFE8] border-[#C7B8A6] dark:border-[#2E3F61] shadow-[0_24px_48px_-24px_rgba(4,7,14,0.42)] ${
+        interactive ? 'hover:border-[#B46A55] dark:hover:border-[#D68C76]' : ''
       }`;
   }
 }
@@ -421,33 +421,33 @@ export const About: React.FC = () => {
             </Reveal>
           </div>
 
-          {/* Right: Crisp Linen Student Profile Card */}
+          {/* Right: Crisp Linen Student Profile Card (dark-adaptive in Dark Mode) */}
           <div className="lg:col-span-5">
             <Reveal variant="scale" delayMs={150}>
-              <div className="relative rounded-2xl bg-[#F2EFE8] text-[#0B1320] p-6 sm:p-7 shadow-[0_24px_54px_-24px_rgba(4,7,14,0.75)] border border-[#C7B8A6] transition-transform duration-200 hover:-translate-y-1">
+              <div className="relative rounded-2xl bg-[#F2EFE8] dark:bg-[#131E34] text-[#0B1320] dark:text-[#F2EFE8] p-6 sm:p-7 shadow-[0_24px_54px_-24px_rgba(4,7,14,0.75)] border border-[#C7B8A6] dark:border-[#2C3C5E] transition-all duration-200 hover:-translate-y-1">
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-x-6 top-0 h-[2px] bg-gradient-to-r from-transparent via-[#B46A55]/75 to-transparent"
                 />
-                <div className="flex items-center justify-between pb-4 border-b border-[#C7B8A6]/65">
-                  <span className="font-mono-tech text-xs text-[#9A4F3A] font-semibold">
+                <div className="flex items-center justify-between pb-4 border-b border-[#C7B8A6]/65 dark:border-[#253452]">
+                  <span className="font-mono-tech text-xs text-[#9A4F3A] dark:text-[#D68C76] font-semibold">
                     Student Profile
                   </span>
-                  <GraduationCap className="w-4 h-4 text-[#B46A55]" aria-hidden="true" />
+                  <GraduationCap className="w-4 h-4 text-[#B46A55] dark:text-[#D68C76]" aria-hidden="true" />
                 </div>
 
-                <dl className="mt-2 divide-y divide-[#C7B8A6]/45">
+                <dl className="mt-2 divide-y divide-[#C7B8A6]/45 dark:divide-[#253452]">
                   {EDUCATION_SPEC.map((item) => (
                     <div
                       key={item.label}
                       className="py-3 flex items-baseline justify-between gap-4 text-xs sm:text-sm"
                     >
-                      <dt className="text-[#4A5264] shrink-0">{item.label}</dt>
+                      <dt className="text-[#4A5264] dark:text-[#C7B8A6] shrink-0">{item.label}</dt>
                       <dd
                         className={`font-medium text-right ${
                           item.tabular
-                            ? 'font-mono-tech tabular-nums text-[#9A4F3A] font-bold'
-                            : 'text-[#0B1320]'
+                            ? 'font-mono-tech tabular-nums text-[#9A4F3A] dark:text-[#D68C76] font-bold'
+                            : 'text-[#0B1320] dark:text-[#F2EFE8]'
                         }`}
                       >
                         {item.value}
@@ -585,8 +585,8 @@ export const About: React.FC = () => {
                                       isDark
                                         ? 'text-[#D68C76]'
                                         : isSand
-                                          ? 'text-[#7A3725]'
-                                          : 'text-[#9A4F3A]'
+                                          ? 'text-[#7A3725] dark:text-[#D68C76]'
+                                          : 'text-[#9A4F3A] dark:text-[#D68C76]'
                                     }`}
                                   >
                                     {card.num}
@@ -597,8 +597,8 @@ export const About: React.FC = () => {
                                       isDark
                                         ? 'bg-[#D68C76]'
                                         : isSand
-                                          ? 'bg-[#7A3725]'
-                                          : 'bg-[#B46A55]'
+                                          ? 'bg-[#7A3725] dark:bg-[#D68C76]'
+                                          : 'bg-[#B46A55] dark:bg-[#D68C76]'
                                     }`}
                                   />
                                   <span
@@ -606,8 +606,8 @@ export const About: React.FC = () => {
                                       isDark
                                         ? 'text-[#C7B8A6]'
                                         : isSand
-                                          ? 'text-[#1F2A44]'
-                                          : 'text-[#4A5264]'
+                                          ? 'text-[#1F2A44] dark:text-[#C7B8A6]'
+                                          : 'text-[#4A5264] dark:text-[#C7B8A6]'
                                     }`}
                                   >
                                     {card.label}
@@ -621,7 +621,7 @@ export const About: React.FC = () => {
 
                               <div
                                 className={`shrink-0 ${
-                                  isDark ? 'text-[#F2EFE8]' : 'text-[#0B1320]'
+                                  isDark ? 'text-[#F2EFE8]' : 'text-[#0B1320] dark:text-[#F2EFE8]'
                                 }`}
                               >
                                 {card.graphic}
@@ -633,8 +633,8 @@ export const About: React.FC = () => {
                                 isDark
                                   ? 'text-[#DED8CE]'
                                   : isSand
-                                    ? 'text-[#0B1320]'
-                                    : 'text-[#1F2A44]'
+                                    ? 'text-[#0B1320] dark:text-[#DED8CE]'
+                                    : 'text-[#1F2A44] dark:text-[#DED8CE]'
                               }`}
                             >
                               {card.body}
@@ -646,8 +646,8 @@ export const About: React.FC = () => {
                               isDark
                                 ? 'border-[#C7B8A6]/20 text-[#C7B8A6]'
                                 : isSand
-                                  ? 'border-[#0B1320]/20 text-[#1F2A44]'
-                                  : 'border-[#C7B8A6]/55 text-[#4A5264]'
+                                  ? 'border-[#0B1320]/20 dark:border-[#C7B8A6]/20 text-[#1F2A44] dark:text-[#C7B8A6]'
+                                  : 'border-[#C7B8A6]/55 dark:border-[#C7B8A6]/20 text-[#4A5264] dark:text-[#C7B8A6]'
                             }`}
                           >
                             <span className="font-mono-tech">{card.footnote}</span>
@@ -656,8 +656,8 @@ export const About: React.FC = () => {
                                 isDark
                                   ? 'text-[#D68C76]'
                                   : isSand
-                                    ? 'text-[#7A3725] font-semibold'
-                                    : 'text-[#9A4F3A] font-semibold'
+                                    ? 'text-[#7A3725] dark:text-[#D68C76] font-semibold'
+                                    : 'text-[#9A4F3A] dark:text-[#D68C76] font-semibold'
                               }`}
                             >
                               Chapter {card.num} / 05

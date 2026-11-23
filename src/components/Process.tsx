@@ -50,7 +50,7 @@ const STAGES: ProcessStage[] = [
           strokeLinejoin="round"
         />
         <circle cx="36" cy="12" r="3.5" fill="#B46A55" />
-        <circle cx="8" cy="31" r="2.5" stroke="#1F2A44" strokeWidth="1.5" />
+        <circle cx="8" cy="31" r="2.5" className="stroke-[#1F2A44] dark:stroke-[#C7B8A6]" strokeWidth="1.5" />
       </svg>
     ),
   },
@@ -90,13 +90,13 @@ const STAGES: ProcessStage[] = [
           width="28"
           height="28"
           rx="6"
-          stroke="#1F2A44"
+          className="stroke-[#1F2A44] dark:stroke-[#C7B8A6]"
           strokeOpacity="0.8"
           strokeWidth="1.6"
         />
         <path
           d="M16 22.5L20 26.5L29 17"
-          stroke="#7A3725"
+          className="stroke-[#7A3725] dark:stroke-[#D68C76]"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -129,25 +129,25 @@ const STAGES: ProcessStage[] = [
 function getStageSurface(theme: StageTheme, focused: boolean) {
   switch (theme) {
     case 'midnight':
-      return `bg-[#0B1320] text-[#F2EFE8] shadow-[0_24px_48px_-24px_rgba(11,19,32,0.52)] ${
-        focused ? 'border-[#D68C76]/85' : 'border-[#1F2A44]'
+      return `bg-[#0B1320] dark:bg-[#09101D] text-[#F2EFE8] shadow-[0_24px_48px_-24px_rgba(11,19,32,0.52)] ${
+        focused ? 'border-[#D68C76]/85' : 'border-[#1F2A44] dark:border-[#29395A]'
       }`;
     case 'navy':
-      return `bg-[#1F2A44] text-[#F2EFE8] shadow-[0_24px_48px_-24px_rgba(11,19,32,0.48)] ${
-        focused ? 'border-[#D68C76]/85' : 'border-[#C7B8A6]/30'
+      return `bg-[#1F2A44] dark:bg-[#17233D] text-[#F2EFE8] shadow-[0_24px_48px_-24px_rgba(11,19,32,0.48)] ${
+        focused ? 'border-[#D68C76]/85' : 'border-[#C7B8A6]/30 dark:border-[#31446A]'
       }`;
     case 'sand':
-      return `bg-[#C7B8A6] text-[#0B1320] shadow-[0_22px_44px_-24px_rgba(11,19,32,0.28)] ${
-        focused ? 'border-[#7A3725]' : 'border-[#A89680]'
+      return `bg-[#C7B8A6] dark:bg-[#231B1A] text-[#0B1320] dark:text-[#F2EFE8] shadow-[0_22px_44px_-24px_rgba(11,19,32,0.28)] ${
+        focused ? 'border-[#7A3725] dark:border-[#D68C76]' : 'border-[#A89680] dark:border-[#B46A55]/45'
       }`;
     case 'ink':
-      return `bg-[#121B2E] text-[#F2EFE8] shadow-[0_26px_52px_-24px_rgba(11,19,32,0.6)] ${
-        focused ? 'border-[#D68C76]/85' : 'border-[#C7B8A6]/30'
+      return `bg-[#121B2E] dark:bg-[#0F182B] text-[#F2EFE8] shadow-[0_26px_52px_-24px_rgba(11,19,32,0.6)] ${
+        focused ? 'border-[#D68C76]/85' : 'border-[#C7B8A6]/30 dark:border-[#2C3D60]'
       }`;
     case 'linen':
     default:
-      return `bg-[#FAF8F4] text-[#0B1320] shadow-[0_20px_42px_-24px_rgba(11,19,32,0.18)] ${
-        focused ? 'border-[#B46A55]' : 'border-[#C7B8A6]'
+      return `bg-[#FAF8F4] dark:bg-[#152036] text-[#0B1320] dark:text-[#F2EFE8] shadow-[0_20px_42px_-24px_rgba(11,19,32,0.18)] ${
+        focused ? 'border-[#B46A55] dark:border-[#D68C76]' : 'border-[#C7B8A6] dark:border-[#2E3F61]'
       }`;
   }
 }
@@ -270,7 +270,7 @@ export const Process: React.FC = () => {
     <section
       id="process"
       aria-labelledby="process-heading"
-      className="scroll-mt-20 relative w-full bg-[#EAE5DC] text-[#0B1320] border-t border-[#C7B8A6]/60 overflow-x-clip"
+      className="scroll-mt-20 relative w-full bg-[#EAE5DC] dark:bg-[#0E1628] text-[#0B1320] dark:text-[#F2EFE8] border-t border-[#C7B8A6]/60 dark:border-[#22314F] overflow-x-clip transition-colors duration-200"
     >
       <div
         aria-hidden="true"
@@ -295,12 +295,12 @@ export const Process: React.FC = () => {
           <Reveal>
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
               <div>
-                <p className="font-mono-tech text-xs tracking-[0.14em] text-[#9A4F3A] font-semibold">
+                <p className="font-mono-tech text-xs tracking-[0.14em] text-[#9A4F3A] dark:text-[#D68C76] font-semibold">
                   02. How I Work
                 </p>
                 <h2
                   id="process-heading"
-                  className="mt-2.5 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#0B1320] [text-wrap:balance]"
+                  className="mt-2.5 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#0B1320] dark:text-[#F2EFE8] [text-wrap:balance]"
                 >
                   How I approach building things.
                 </h2>
@@ -317,11 +317,17 @@ export const Process: React.FC = () => {
                       aria-current={isCurrent ? 'step' : undefined}
                       className={`px-3 py-1.5 rounded-lg font-mono-tech text-xs font-medium transition-colors cursor-pointer whitespace-nowrap shrink-0 border ${
                         isCurrent
-                          ? 'bg-[#0B1320] text-[#F2EFE8] border-[#0B1320]'
-                          : 'bg-[#FAF8F4] text-[#1F2A44] border-[#C7B8A6] hover:border-[#B46A55] hover:text-[#0B1320]'
+                          ? 'bg-[#0B1320] dark:bg-[#B46A55] text-[#F2EFE8] border-[#0B1320] dark:border-[#D68C76]'
+                          : 'bg-[#FAF8F4] dark:bg-[#152036] text-[#1F2A44] dark:text-[#DED8CE] border-[#C7B8A6] dark:border-[#2E3F61] hover:border-[#B46A55] dark:hover:border-[#D68C76] hover:text-[#0B1320] dark:hover:text-[#F2EFE8]'
                       }`}
                     >
-                      <span className={isCurrent ? 'text-[#D68C76]' : 'text-[#9A4F3A]'}>
+                      <span
+                        className={
+                          isCurrent
+                            ? 'text-[#D68C76] dark:text-[#F2EFE8]'
+                            : 'text-[#9A4F3A] dark:text-[#D68C76]'
+                        }
+                      >
                         {stage.num}
                       </span>{' '}
                       {stage.title}
@@ -333,10 +339,10 @@ export const Process: React.FC = () => {
           </Reveal>
 
           {useScrollGlide && (
-            <div className="mt-6 h-[2px] w-full bg-[#C7B8A6]/70 rounded-full overflow-hidden">
+            <div className="mt-6 h-[2px] w-full bg-[#C7B8A6]/70 dark:bg-[#233252] rounded-full overflow-hidden">
               <div
                 ref={progressBarRef}
-                className="h-full w-full bg-[#B46A55] origin-left"
+                className="h-full w-full bg-[#B46A55] dark:bg-[#D68C76] origin-left"
                 style={{ transform: `scaleX(${1 / STAGES.length})` }}
               />
             </div>
@@ -376,8 +382,8 @@ export const Process: React.FC = () => {
                               isDark
                                 ? 'bg-[#070C16]/65 border-[#C7B8A6]/30 text-[#F2EFE8]'
                                 : isSand
-                                  ? 'bg-[#EAE5DC] border-[#0B1320]/20 text-[#0B1320]'
-                                  : 'bg-[#F2EFE8] border-[#C7B8A6] text-[#0B1320]'
+                                  ? 'bg-[#EAE5DC] dark:bg-[#191313] border-[#0B1320]/20 dark:border-[#D68C76]/35 text-[#0B1320] dark:text-[#F2EFE8]'
+                                  : 'bg-[#F2EFE8] dark:bg-[#0D1627] border-[#C7B8A6] dark:border-[#2E3F61] text-[#0B1320] dark:text-[#F2EFE8]'
                             }`}
                           >
                             {stage.illustration}
@@ -389,8 +395,8 @@ export const Process: React.FC = () => {
                                 isDark
                                   ? 'text-[#D68C76]'
                                   : isSand
-                                    ? 'text-[#7A3725]'
-                                    : 'text-[#9A4F3A]'
+                                    ? 'text-[#7A3725] dark:text-[#D68C76]'
+                                    : 'text-[#9A4F3A] dark:text-[#D68C76]'
                               }`}
                             >
                               Stage {stage.num}
@@ -403,7 +409,7 @@ export const Process: React.FC = () => {
 
                         <span
                           className={`font-display text-3xl font-bold tabular-nums opacity-25 ${
-                            isDark ? 'text-[#C7B8A6]' : 'text-[#0B1320]'
+                            isDark ? 'text-[#C7B8A6]' : 'text-[#0B1320] dark:text-[#C7B8A6]'
                           }`}
                           aria-hidden="true"
                         >
@@ -416,8 +422,8 @@ export const Process: React.FC = () => {
                           isDark
                             ? 'text-[#D68C76]'
                             : isSand
-                              ? 'text-[#7A3725]'
-                              : 'text-[#9A4F3A]'
+                              ? 'text-[#7A3725] dark:text-[#D68C76]'
+                              : 'text-[#9A4F3A] dark:text-[#D68C76]'
                         }`}
                       >
                         {stage.subtitle}
@@ -428,8 +434,8 @@ export const Process: React.FC = () => {
                           isDark
                             ? 'text-[#DED8CE]'
                             : isSand
-                              ? 'text-[#0B1320]'
-                              : 'text-[#1F2A44]'
+                              ? 'text-[#0B1320] dark:text-[#DED8CE]'
+                              : 'text-[#1F2A44] dark:text-[#DED8CE]'
                         }`}
                       >
                         {stage.detail}
@@ -441,8 +447,8 @@ export const Process: React.FC = () => {
                         isDark
                           ? 'border-[#C7B8A6]/20 text-[#C7B8A6]'
                           : isSand
-                            ? 'border-[#0B1320]/20 text-[#1F2A44]'
-                            : 'border-[#C7B8A6]/60 text-[#4A5264]'
+                            ? 'border-[#0B1320]/20 dark:border-[#C7B8A6]/20 text-[#1F2A44] dark:text-[#C7B8A6]'
+                            : 'border-[#C7B8A6]/60 dark:border-[#C7B8A6]/20 text-[#4A5264] dark:text-[#C7B8A6]'
                       }`}
                     >
                       <span className="font-mono-tech">{stage.outcome}</span>
@@ -451,8 +457,8 @@ export const Process: React.FC = () => {
                           isDark
                             ? 'text-[#D68C76]'
                             : isSand
-                              ? 'text-[#7A3725]'
-                              : 'text-[#9A4F3A]'
+                              ? 'text-[#7A3725] dark:text-[#D68C76]'
+                              : 'text-[#9A4F3A] dark:text-[#D68C76]'
                         }`}
                         aria-hidden="true"
                       />

@@ -10,12 +10,20 @@ import { Process } from './components/Process.tsx';
 import { ProjectDetail } from './components/ProjectDetail.tsx';
 import { Projects } from './components/Projects.tsx';
 import { Skills } from './components/Skills.tsx';
+import { FloatingThemeButton } from './components/ThemeSwitcher.tsx';
+import { ThemeProvider } from './context/ThemeContext.tsx';
 import {
   ADMIN_ROUTE_META,
+  PERSON_IDENTITY,
   PUBLIC_ROUTES,
+  SITE_KEYWORDS,
+  buildJsonLdGraph,
+  buildProjectJsonLdGraph,
   findPublicRoute,
   normalizePathname,
+  resolveAbsoluteAssetUrl,
 } from './seo/routes.ts';
+import { type ProjectRecord } from './types/portfolio.ts';
 
 type AppView =
   | { kind: 'portfolio'; section: NavSection }
@@ -41,60 +49,151 @@ function resolvePathToView(pathname: string): AppView {
   return { kind: 'not-found' };
 }
 
-function updateDocumentHead(pathname: string) {
-  const normalized = normalizePathname(pathname);
-  const origin = window.location.origin;
-  const canonicalUrl = `${origin}${normalized === '/' ? '' : normalized}` || origin;
+function setMetaTag(selector: string, content: string) {
+  const el = document.querySelector<HTMLMetaElement>(selector);
+  if (el) el.setAttribute('content', content);
+}
 
-  let title = PUBLIC_ROUTES[0].title;
-  let description = PUBLIC_ROUTES[0].description;
-  let robots = 'index, follow';
-
-  if (normalized === '/admin') {
-    title = ADMIN_ROUTE_META.title;
-    description = ADMIN_ROUTE_META.description;
-    robots = 'noindex, nofollow, noarchive';
-  } else if (normalized.startsWith('/work/') && normalized.length > '/work/'.length) {
-    const slugLabel = decodeURIComponent(normalized.slice('/work/'.length)).replace(/-/g, ' ');
-    title = `${slugLabel} — Software Project | BAMBE Aine Chris`;
-    description = 'Detailed software project showcase and engineering breakdown by BAMBE Aine Chris.';
-  } else {
-    const matched = findPublicRoute(normalized);
-    if (matched) {
-      title = matched.title;
-      description = matched.description;
-    } else {
-      title = 'Page Not Found | BAMBE Aine Chris';
-      description = 'Requested page could not be found on BAMBE Aine Chris portfolio.';
-      robots = 'noindex, nofollow';
-    }
-  }
-
-  document.title = title;
-
-  const setMeta = (selector: string, content: string) => {
-    const el = document.querySelector<HTMLMetaElement>(selector);
-    if (el) el.setAttribute('content', content);
-  };
-
-  setMeta('meta[name="description"]', description);
-  setMeta('meta[name="robots"]', robots);
-  setMeta('meta[property="og:title"]', title);
-  setMeta('meta[property="og:description"]', description);
-  setMeta('meta[property="og:url"]', canonicalUrl);
-  setMeta('meta[name="twitter:title"]', title);
-  setMeta('meta[name="twitter:description"]', description);
-
+function setCanonicalUrl(url: string) {
   let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonicalLink) {
     canonicalLink = document.createElement('link');
     canonicalLink.setAttribute('rel', 'canonical');
     document.head.appendChild(canonicalLink);
   }
-  canonicalLink.setAttribute('href', canonicalUrl);
+  canonicalLink.setAttribute('href', url);
 }
 
-export default function App() {
+function setStructuredData(graph: Record<string, unknown> | null) {
+  let script = document.querySelector<HTMLScriptElement>(
+    'script#structured-data[type="application/ld+json"]',
+  );
+  if (!graph) {
+    if (script) script.textContent = '';
+    return;
+  }
+  if (!script) {
+    script = document.createElement('script');
+    script.id = 'structured-data';
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(graph);
+}
+
+export function applyProjectSeoHead(project: ProjectRecord | null, isNotFound = false) {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  const origin = window.location.origin;
+
+  if (isNotFound || !project) {
+    const title = 'Project Not Found | BAMBE Aine Chris';
+    const description = 'The requested software project could not be found.';
+    const fallbackImg = resolveAbsoluteAssetUrl(origin, PERSON_IDENTITY.ogImagePath);
+
+    document.title = title;
+    setMetaTag('meta[name="description"]', description);
+    setMetaTag('meta[name="keywords"]', SITE_KEYWORDS);
+    setMetaTag('meta[name="robots"]', 'noindex, nofollow');
+    setMetaTag('meta[property="og:type"]', 'website');
+    setMetaTag('meta[property="og:title"]', title);
+    setMetaTag('meta[property="og:description"]', description);
+    setMetaTag('meta[property="og:url"]', window.location.href);
+    setMetaTag('meta[property="og:image"]', fallbackImg);
+    setMetaTag('meta[name="twitter:url"]', window.location.href);
+    setMetaTag('meta[name="twitter:title"]', title);
+    setMetaTag('meta[name="twitter:description"]', description);
+    setMetaTag('meta[name="twitter:image"]', fallbackImg);
+    setStructuredData(null);
+    return;
+  }
+
+  const canonicalUrl = `${origin}/work/${encodeURIComponent(project.slug)}`;
+  const title = `${project.title} — Software Project | BAMBE Aine Chris`;
+  const description = project.description.slice(0, 160);
+  const ogImage = resolveAbsoluteAssetUrl(origin, project.imageUrl);
+  const keywords = [
+    project.title,
+    ...project.technologies,
+    'BAMBE Aine Chris',
+    'Ainechris',
+    'Software Project',
+  ].join(', ');
+
+  document.title = title;
+  setCanonicalUrl(canonicalUrl);
+  setMetaTag('meta[name="description"]', description);
+  setMetaTag('meta[name="keywords"]', keywords);
+  setMetaTag('meta[name="robots"]', 'index, follow');
+  setMetaTag('meta[property="og:type"]', 'article');
+  setMetaTag('meta[property="og:title"]', title);
+  setMetaTag('meta[property="og:description"]', description);
+  setMetaTag('meta[property="og:url"]', canonicalUrl);
+  setMetaTag('meta[property="og:image"]', ogImage);
+  setMetaTag('meta[name="twitter:url"]', canonicalUrl);
+  setMetaTag('meta[name="twitter:title"]', title);
+  setMetaTag('meta[name="twitter:description"]', description);
+  setMetaTag('meta[name="twitter:image"]', ogImage);
+  setStructuredData(buildProjectJsonLdGraph(origin, project));
+}
+
+function updateDocumentHead(pathname: string) {
+  const normalized = normalizePathname(pathname);
+  const origin = window.location.origin;
+  const canonicalUrl = `${origin}${normalized === '/' ? '' : normalized}` || origin;
+  const defaultImageUrl = resolveAbsoluteAssetUrl(origin, PERSON_IDENTITY.ogImagePath);
+
+  let title = PUBLIC_ROUTES[0].title;
+  let description = PUBLIC_ROUTES[0].description;
+  let keywords = PUBLIC_ROUTES[0].keywords;
+  let ogType: string = PUBLIC_ROUTES[0].ogType;
+  let robots = 'index, follow';
+  let jsonLdGraph: Record<string, unknown> | null = null;
+
+  if (normalized === '/admin') {
+    title = ADMIN_ROUTE_META.title;
+    description = ADMIN_ROUTE_META.description;
+    ogType = 'website';
+    robots = 'noindex, nofollow, noarchive';
+  } else if (normalized.startsWith('/work/') && normalized.length > '/work/'.length) {
+    const slugLabel = decodeURIComponent(normalized.slice('/work/'.length)).replace(/-/g, ' ');
+    title = `${slugLabel} — Software Project | BAMBE Aine Chris`;
+    description = 'Detailed software project showcase and engineering breakdown by BAMBE Aine Chris.';
+    ogType = 'article';
+  } else {
+    const matched = findPublicRoute(normalized);
+    if (matched) {
+      title = matched.title;
+      description = matched.description;
+      keywords = matched.keywords;
+      ogType = matched.ogType;
+      jsonLdGraph = buildJsonLdGraph(origin, normalized);
+    } else {
+      title = 'Page Not Found | BAMBE Aine Chris';
+      description = 'Requested page could not be found on BAMBE Aine Chris portfolio.';
+      keywords = SITE_KEYWORDS;
+      ogType = 'website';
+      robots = 'noindex, nofollow';
+    }
+  }
+
+  document.title = title;
+  setCanonicalUrl(canonicalUrl);
+  setMetaTag('meta[name="description"]', description);
+  setMetaTag('meta[name="keywords"]', keywords);
+  setMetaTag('meta[name="robots"]', robots);
+  setMetaTag('meta[property="og:type"]', ogType);
+  setMetaTag('meta[property="og:title"]', title);
+  setMetaTag('meta[property="og:description"]', description);
+  setMetaTag('meta[property="og:url"]', canonicalUrl);
+  setMetaTag('meta[property="og:image"]', defaultImageUrl);
+  setMetaTag('meta[name="twitter:url"]', canonicalUrl);
+  setMetaTag('meta[name="twitter:title"]', title);
+  setMetaTag('meta[name="twitter:description"]', description);
+  setMetaTag('meta[name="twitter:image"]', defaultImageUrl);
+  setStructuredData(jsonLdGraph);
+}
+
+function PortfolioApp() {
   const [view, setView] = useState<AppView>(() => resolvePathToView(window.location.pathname));
   const [activeSection, setActiveSection] = useState<NavSection>(() => {
     const initial = resolvePathToView(window.location.pathname);
@@ -230,13 +329,18 @@ export default function App() {
   }
 
   if (view.kind === 'not-found') {
-    return <NotFound onGoHome={() => navigateToSection('home')} />;
+    return (
+      <>
+        <NotFound onGoHome={() => navigateToSection('home')} />
+        <FloatingThemeButton />
+      </>
+    );
   }
 
   return (
     <div
       id="top"
-      className="min-h-screen bg-[#F2EFE8] text-[#0B1320] flex flex-col overflow-x-clip"
+      className="min-h-screen bg-[#F2EFE8] text-[#0B1320] dark:bg-[#070C16] dark:text-[#F2EFE8] flex flex-col overflow-x-clip transition-colors duration-200"
     >
       <Header activeSection={activeSection} onSelectSection={navigateToSection} />
 
@@ -270,6 +374,16 @@ export default function App() {
         onSelectSection={navigateToSection}
         onOpenAdmin={() => openAdmin('messages')}
       />
+
+      <FloatingThemeButton />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <PortfolioApp />
+    </ThemeProvider>
   );
 }

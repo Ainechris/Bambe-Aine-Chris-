@@ -94,23 +94,23 @@ const SOCIAL_CARDS: SocialPlatformItem[] = [
 
 function getSatelliteCardSurface(surface: SocialPlatformItem['surface'], isActive: boolean) {
   if (surface === 'linen') {
-    return `bg-[#F2EFE8] text-[#0B1320] ${
+    return `bg-[#F2EFE8] dark:bg-[#141F36] text-[#0B1320] dark:text-[#F2EFE8] ${
       isActive
-        ? 'border-[#B46A55] shadow-[0_28px_52px_-18px_rgba(180,106,85,0.38)]'
-        : 'border-[#C7B8A6] shadow-[0_20px_38px_-18px_rgba(11,19,32,0.42)]'
+        ? 'border-[#B46A55] dark:border-[#D68C76] shadow-[0_28px_52px_-18px_rgba(180,106,85,0.38)]'
+        : 'border-[#C7B8A6] dark:border-[#2C3E61] shadow-[0_20px_38px_-18px_rgba(11,19,32,0.42)]'
     }`;
   }
   if (surface === 'sand') {
-    return `bg-[#C7B8A6] text-[#0B1320] ${
+    return `bg-[#C7B8A6] dark:bg-[#241B19] text-[#0B1320] dark:text-[#F2EFE8] ${
       isActive
-        ? 'border-[#B46A55] shadow-[0_28px_52px_-18px_rgba(180,106,85,0.42)]'
-        : 'border-[#A89680] shadow-[0_20px_38px_-18px_rgba(11,19,32,0.45)]'
+        ? 'border-[#B46A55] dark:border-[#D68C76] shadow-[0_28px_52px_-18px_rgba(180,106,85,0.42)]'
+        : 'border-[#A89680] dark:border-[#B46A55]/45 shadow-[0_20px_38px_-18px_rgba(11,19,32,0.45)]'
     }`;
   }
-  return `bg-[#1F2A44] text-[#F2EFE8] ${
+  return `bg-[#1F2A44] dark:bg-[#19253F] text-[#F2EFE8] ${
     isActive
       ? 'border-[#D68C76] shadow-[0_28px_52px_-18px_rgba(11,19,32,0.7)]'
-      : 'border-[#C7B8A6]/35 shadow-[0_20px_40px_-18px_rgba(11,19,32,0.55)]'
+      : 'border-[#C7B8A6]/35 dark:border-[#2C3E61] shadow-[0_20px_40px_-18px_rgba(11,19,32,0.55)]'
   }`;
 }
 
@@ -307,8 +307,8 @@ export const SocialIdentityDeck: React.FC = () => {
                         isDarkSurface
                           ? 'text-[#D68C76]'
                           : card.surface === 'sand'
-                            ? 'text-[#7A3725]'
-                            : 'text-[#9A4F3A]'
+                            ? 'text-[#7A3725] dark:text-[#D68C76]'
+                            : 'text-[#9A4F3A] dark:text-[#D68C76]'
                       }`}
                       aria-hidden="true"
                     />
@@ -320,8 +320,8 @@ export const SocialIdentityDeck: React.FC = () => {
                         isDarkSurface
                           ? 'text-[#C7B8A6]'
                           : card.surface === 'sand'
-                            ? 'text-[#1F2A44]'
-                            : 'text-[#4A5264]'
+                            ? 'text-[#1F2A44] dark:text-[#C7B8A6]'
+                            : 'text-[#4A5264] dark:text-[#C7B8A6]'
                       }`}
                     >
                       {card.platform}
@@ -334,8 +334,8 @@ export const SocialIdentityDeck: React.FC = () => {
                         isDarkSurface
                           ? 'text-[#D68C76]'
                           : card.surface === 'sand'
-                            ? 'text-[#7A3725] font-medium'
-                            : 'text-[#9A4F3A]'
+                            ? 'text-[#7A3725] dark:text-[#D68C76] font-medium'
+                            : 'text-[#9A4F3A] dark:text-[#D68C76]'
                       }`}
                     >
                       {card.handle}

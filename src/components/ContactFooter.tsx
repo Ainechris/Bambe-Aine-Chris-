@@ -15,6 +15,7 @@ import { PUBLIC_ROUTES } from '../seo/routes.ts';
 import { BrandMark } from './BrandMark.tsx';
 import { type NavSection } from './Header.tsx';
 import { Reveal } from './MotionPrimitives.tsx';
+import { FooterThemeSwitcher } from './ThemeSwitcher.tsx';
 
 interface ContactFooterProps {
   onSelectSection: (section: NavSection) => void;
@@ -236,7 +237,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
       <section
         id="contact"
         aria-labelledby="contact-heading"
-        className="scroll-mt-20 relative w-full bg-[#1F2A44] text-[#F2EFE8] border-t border-[#C7B8A6]/25 overflow-hidden"
+        className="scroll-mt-20 relative w-full bg-[#1F2A44] dark:bg-[#0D1628] text-[#F2EFE8] border-t border-[#C7B8A6]/25 dark:border-[#1E2C49] overflow-hidden transition-colors duration-200"
       >
         {/* Subtle ambient depth washes so the frosted glass card refracts layered Midnight Linen light */}
         <div
@@ -631,7 +632,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
         </div>
       </section>
 
-      <footer className="w-full bg-[#0B1320] text-[#C7B8A6] border-t border-[#1F2A44]">
+      <footer className="w-full bg-[#0B1320] dark:bg-[#060A12] text-[#C7B8A6] border-t border-[#1F2A44] dark:border-[#1A263E] transition-colors duration-200">
         {/* Subtle Sculptural SVG Horizon Divider */}
         <div className="max-w-[1220px] mx-auto px-5 sm:px-8 pt-6">
           <svg
@@ -651,7 +652,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
           </svg>
         </div>
 
-        <div className="max-w-[1220px] mx-auto px-5 sm:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs sm:text-sm">
+        <div className="max-w-[1220px] mx-auto px-5 sm:px-8 py-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-xs sm:text-sm">
           <div className="flex items-center gap-3">
             <BrandMark className="w-7 h-7 shrink-0" />
             <div>
@@ -663,7 +664,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
             {PUBLIC_ROUTES.map((route) => (
               <a
                 key={route.path}
@@ -705,6 +706,8 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               <Lock className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Admin Portal</span>
             </a>
+
+            <FooterThemeSwitcher />
           </div>
         </div>
       </footer>

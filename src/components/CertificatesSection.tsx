@@ -67,7 +67,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
     <section
       id="certificates"
       aria-labelledby="certificates-heading"
-      className="scroll-mt-20 w-full bg-[#0B1320] text-[#F2EFE8] border-t border-[#1F2A44]"
+      className="scroll-mt-20 w-full bg-[#0B1320] dark:bg-[#070D18] text-[#F2EFE8] border-t border-[#1F2A44] dark:border-[#1B2740] transition-colors duration-200"
     >
       <div ref={gridRef} className="max-w-[1220px] mx-auto px-5 sm:px-8 py-20 sm:py-24">
         <Reveal>
@@ -104,19 +104,19 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
             {[1, 2, 3].map((n) => (
               <div
                 key={n}
-                className="rounded-2xl bg-[#FAF8F4] border border-[#C7B8A6] overflow-hidden animate-pulse"
+                className="rounded-2xl bg-[#FAF8F4] dark:bg-[#121C31] border border-[#C7B8A6] dark:border-[#2C3C5E] overflow-hidden animate-pulse"
               >
-                <div className="aspect-[16/10] bg-[#EAE5DC]" />
+                <div className="aspect-[16/10] bg-[#EAE5DC] dark:bg-[#0B1320]" />
                 <div className="p-6 space-y-3">
-                  <div className="h-3 w-1/3 bg-[#EAE5DC] rounded" />
-                  <div className="h-5 w-3/4 bg-[#EAE5DC] rounded" />
-                  <div className="h-3 w-full bg-[#EAE5DC] rounded" />
+                  <div className="h-3 w-1/3 bg-[#EAE5DC] dark:bg-[#1F2A44] rounded" />
+                  <div className="h-5 w-3/4 bg-[#EAE5DC] dark:bg-[#1F2A44] rounded" />
+                  <div className="h-3 w-full bg-[#EAE5DC] dark:bg-[#1F2A44] rounded" />
                 </div>
               </div>
             ))}
           </div>
         ) : error ? (
-          <div className="mt-12 rounded-2xl bg-[#FAF8F4] border border-[#C7B8A6] p-8 text-sm text-[#4A5264]">
+          <div className="mt-12 rounded-2xl bg-[#FAF8F4] dark:bg-[#121C31] border border-[#C7B8A6] dark:border-[#2C3C5E] p-8 text-sm text-[#4A5264] dark:text-[#C7B8A6]">
             {error}
           </div>
         ) : certificates.length === 0 ? (
@@ -149,13 +149,13 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
 
               return (
                 <Reveal key={cert.id} delayMs={Math.min((idx % 3) * 75, 200)}>
-                  <article className="group h-full rounded-2xl bg-[#FAF8F4] text-[#0B1320] border border-[#C7B8A6] hover:border-[#D68C76] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_22px_44px_-22px_rgba(4,7,14,0.65)]">
+                  <article className="group h-full rounded-2xl bg-[#FAF8F4] dark:bg-[#121C31] text-[#0B1320] dark:text-[#F2EFE8] border border-[#C7B8A6] dark:border-[#2C3C5E] hover:border-[#D68C76] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_22px_44px_-22px_rgba(4,7,14,0.65)]">
                     <div>
                       {isImage && cert.fileUrl ? (
                         <button
                           type="button"
                           onClick={() => setPreviewImageCert(cert)}
-                          className="relative block w-full aspect-[16/10] bg-[#EAE5DC] overflow-hidden cursor-pointer border-b border-[#C7B8A6]/60"
+                          className="relative block w-full aspect-[16/10] bg-[#EAE5DC] dark:bg-[#0B1320] overflow-hidden cursor-pointer border-b border-[#C7B8A6]/60 dark:border-[#24324D]"
                           aria-label={`View larger preview of ${cert.title}`}
                         >
                           <div
@@ -183,49 +183,49 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
                           href={cert.fileUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex flex-col items-center justify-center gap-2 w-full aspect-[16/10] bg-[#EAE5DC] hover:bg-[#DFD7CA] border-b border-[#C7B8A6]/60 p-6 transition-colors duration-150"
+                          className="flex flex-col items-center justify-center gap-2 w-full aspect-[16/10] bg-[#EAE5DC] dark:bg-[#0B1320] hover:bg-[#DFD7CA] dark:hover:bg-[#152036] border-b border-[#C7B8A6]/60 dark:border-[#24324D] p-6 transition-colors duration-150"
                         >
-                          <div className="w-11 h-11 rounded-xl bg-[#FAF8F4] border border-[#C7B8A6] flex items-center justify-center">
-                            <FileText className="w-5 h-5 text-[#B46A55]" aria-hidden="true" />
+                          <div className="w-11 h-11 rounded-xl bg-[#FAF8F4] dark:bg-[#131E34] border border-[#C7B8A6] dark:border-[#2C3C5E] flex items-center justify-center">
+                            <FileText className="w-5 h-5 text-[#B46A55] dark:text-[#D68C76]" aria-hidden="true" />
                           </div>
-                          <span className="text-xs font-medium text-[#0B1320] truncate max-w-full">
+                          <span className="text-xs font-medium text-[#0B1320] dark:text-[#F2EFE8] truncate max-w-full">
                             {cert.originalFileName || 'Certificate Document (PDF)'}
                           </span>
-                          <span className="inline-flex items-center gap-1 text-xs text-[#4A5264] group-hover:text-[#9A4F3A] transition-colors">
+                          <span className="inline-flex items-center gap-1 text-xs text-[#4A5264] dark:text-[#C7B8A6] group-hover:text-[#9A4F3A] dark:group-hover:text-[#D68C76] transition-colors">
                             <span>Open PDF in new tab</span>
                             <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                           </span>
                         </a>
                       ) : (
-                        <div className="flex flex-col items-center justify-center gap-2 w-full aspect-[16/10] bg-[#EAE5DC] border-b border-[#C7B8A6]/60 p-6">
-                          <Award className="w-7 h-7 text-[#B46A55]" aria-hidden="true" />
-                          <span className="font-mono-tech text-xs text-[#4A5264]">
+                        <div className="flex flex-col items-center justify-center gap-2 w-full aspect-[16/10] bg-[#EAE5DC] dark:bg-[#0B1320] border-b border-[#C7B8A6]/60 dark:border-[#24324D] p-6">
+                          <Award className="w-7 h-7 text-[#B46A55] dark:text-[#D68C76]" aria-hidden="true" />
+                          <span className="font-mono-tech text-xs text-[#4A5264] dark:text-[#C7B8A6]">
                             {cert.category}
                           </span>
                         </div>
                       )}
 
                       <div className="p-6">
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono-tech text-xs text-[#4A5264]">
-                          <span className="text-[#9A4F3A] font-semibold">{cert.category}</span>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono-tech text-xs text-[#4A5264] dark:text-[#C7B8A6]">
+                          <span className="text-[#9A4F3A] dark:text-[#D68C76] font-semibold">{cert.category}</span>
                           <span aria-hidden="true">·</span>
                           <span className="tabular-nums">{formatDisplayDate(cert.issueDate)}</span>
                         </div>
 
-                        <h3 className="mt-2.5 font-display text-lg font-semibold tracking-tight text-[#0B1320]">
+                        <h3 className="mt-2.5 font-display text-lg font-semibold tracking-tight text-[#0B1320] dark:text-[#F2EFE8]">
                           {cert.title}
                         </h3>
 
-                        <p className="mt-1 text-sm font-medium text-[#1F2A44]">{cert.issuer}</p>
+                        <p className="mt-1 text-sm font-medium text-[#1F2A44] dark:text-[#DED8CE]">{cert.issuer}</p>
 
-                        <p className="mt-3 text-sm text-[#4A5264] leading-relaxed line-clamp-3">
+                        <p className="mt-3 text-sm text-[#4A5264] dark:text-[#C7B8A6] leading-relaxed line-clamp-3">
                           {cert.description}
                         </p>
                       </div>
                     </div>
 
-                    <div className="px-6 py-4 border-t border-[#C7B8A6]/55 flex flex-wrap items-center justify-between gap-3 text-xs">
-                      <span className="text-[#4A5264] font-mono-tech truncate">
+                    <div className="px-6 py-4 border-t border-[#C7B8A6]/55 dark:border-[#24324D] flex flex-wrap items-center justify-between gap-3 text-xs">
+                      <span className="text-[#4A5264] dark:text-[#C7B8A6] font-mono-tech truncate">
                         {cert.credentialId ? `ID: ${cert.credentialId}` : cert.issuer}
                       </span>
 
@@ -234,7 +234,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
                           <button
                             type="button"
                             onClick={() => setPreviewImageCert(cert)}
-                            className="font-medium text-[#0B1320] hover:text-[#9A4F3A] transition-colors cursor-pointer"
+                            className="font-medium text-[#0B1320] dark:text-[#F2EFE8] hover:text-[#9A4F3A] dark:hover:text-[#D68C76] transition-colors cursor-pointer"
                           >
                             View
                           </button>
@@ -245,7 +245,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
                             href={cert.fileUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 font-medium text-[#0B1320] hover:text-[#9A4F3A] transition-colors"
+                            className="inline-flex items-center gap-1 font-medium text-[#0B1320] dark:text-[#F2EFE8] hover:text-[#9A4F3A] dark:hover:text-[#D68C76] transition-colors"
                           >
                             <span>Open PDF</span>
                             <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -257,7 +257,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
                             href={safeVerifyUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 font-semibold text-[#9A4F3A] hover:underline"
+                            className="inline-flex items-center gap-1 font-semibold text-[#9A4F3A] dark:text-[#D68C76] hover:underline"
                           >
                             <span>Verify</span>
                             <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
@@ -283,18 +283,18 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
           onClick={() => setPreviewImageCert(null)}
         >
           <div
-            className="relative w-full max-w-4xl rounded-2xl bg-[#FAF8F4] border border-[#C7B8A6] shadow-2xl overflow-hidden"
+            className="relative w-full max-w-4xl rounded-2xl bg-[#FAF8F4] dark:bg-[#10192D] border border-[#C7B8A6] dark:border-[#2E3F61] shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-[#C7B8A6]/60">
+            <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-[#C7B8A6]/60 dark:border-[#24324D]">
               <div>
                 <h3
                   id="lightbox-title"
-                  className="font-display text-base sm:text-lg font-semibold text-[#0B1320]"
+                  className="font-display text-base sm:text-lg font-semibold text-[#0B1320] dark:text-[#F2EFE8]"
                 >
                   {previewImageCert.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#4A5264]">
+                <p className="text-xs sm:text-sm text-[#4A5264] dark:text-[#C7B8A6]">
                   {previewImageCert.issuer} · {formatDisplayDate(previewImageCert.issueDate)}
                 </p>
               </div>
@@ -302,13 +302,13 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
                 type="button"
                 onClick={() => setPreviewImageCert(null)}
                 aria-label="Close certificate preview"
-                className="inline-flex items-center justify-center w-10 h-10 rounded-lg text-[#4A5264] hover:text-[#0B1320] hover:bg-[#EAE5DC] transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-lg text-[#4A5264] dark:text-[#C7B8A6] hover:text-[#0B1320] dark:hover:text-[#F2EFE8] hover:bg-[#EAE5DC] dark:hover:bg-[#1F2A44] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-[#EAE5DC] max-h-[75vh] overflow-auto flex items-center justify-center p-4">
+            <div className="bg-[#EAE5DC] dark:bg-[#070C16] max-h-[75vh] overflow-auto flex items-center justify-center p-4">
               <img
                 src={previewImageCert.fileUrl}
                 alt={`${previewImageCert.title} full certificate`}

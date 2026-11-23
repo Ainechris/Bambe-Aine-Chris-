@@ -123,7 +123,7 @@ export const Projects: React.FC<ProjectsProps> = ({
       id="work"
       ref={sectionContainerRef}
       aria-labelledby="work-heading"
-      className="relative scroll-mt-20 w-full bg-[#1F2A44] text-[#F2EFE8] border-t border-[#C7B8A6]/25 overflow-x-clip"
+      className="relative scroll-mt-20 w-full bg-[#1F2A44] dark:bg-[#09101D] text-[#F2EFE8] border-t border-[#C7B8A6]/25 dark:border-[#1E2C49] overflow-x-clip transition-colors duration-200"
     >
       {/* Subtle Scroll-Parallax Architectural Backdrop Layer */}
       <div

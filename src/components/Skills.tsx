@@ -278,7 +278,7 @@ export const Skills: React.FC = () => {
       id="skills"
       ref={sectionRef}
       aria-labelledby="skills-heading"
-      className="skills-atmosphere scroll-mt-20 relative w-full text-[#0B1320] border-t border-[#C7B8A6]/55 overflow-hidden"
+      className="skills-atmosphere scroll-mt-20 relative w-full text-[#0B1320] dark:text-[#F2EFE8] border-t border-[#C7B8A6]/55 dark:border-[#22314F] overflow-hidden transition-colors duration-200"
     >
       {/* Subtle Tactile Linen & Warm Sand tonal depth orbs for authentic frosted refraction */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -336,11 +336,11 @@ export const Skills: React.FC = () => {
             strokeWidth="1"
             strokeDasharray="3 9"
           />
-          <circle cx="240" cy="680" r="130" stroke="#1F2A44" strokeOpacity="0.14" strokeWidth="1" />
+          <circle cx="240" cy="680" r="130" className="stroke-[#1F2A44] dark:stroke-[#C7B8A6]" strokeOpacity="0.16" strokeWidth="1" />
           <circle cx="320" cy="180" r="1.8" fill="#B46A55" fillOpacity="0.35" />
-          <circle cx="640" cy="140" r="1.5" fill="#1F2A44" fillOpacity="0.25" />
+          <circle cx="640" cy="140" r="1.5" className="fill-[#1F2A44] dark:fill-[#C7B8A6]" fillOpacity="0.25" />
           <circle cx="980" cy="310" r="1.6" fill="#B46A55" fillOpacity="0.32" />
-          <circle cx="1110" cy="540" r="2" fill="#1F2A44" fillOpacity="0.22" />
+          <circle cx="1110" cy="540" r="2" className="fill-[#1F2A44] dark:fill-[#C7B8A6]" fillOpacity="0.22" />
           <circle cx="430" cy="510" r="1.5" fill="#9A4F3A" fillOpacity="0.28" />
           <circle cx="810" cy="760" r="1.8" fill="#B46A55" fillOpacity="0.28" />
         </svg>
@@ -361,7 +361,7 @@ export const Skills: React.FC = () => {
         {/* Header with masked line reveal */}
         <header className="max-w-3xl">
           <p
-            className={`font-mono-tech text-xs tracking-[0.16em] text-[#9A4F3A] font-semibold transition-opacity duration-500 ${
+            className={`font-mono-tech text-xs tracking-[0.16em] text-[#9A4F3A] dark:text-[#D68C76] font-semibold transition-opacity duration-500 ${
               sectionInView ? 'opacity-100' : 'opacity-0'
             }`}
           >
@@ -370,7 +370,7 @@ export const Skills: React.FC = () => {
 
           <h2
             id="skills-heading"
-            className="mt-3 font-display text-3xl sm:text-4xl lg:text-[2.65rem] font-bold tracking-tight text-[#0B1320] leading-[1.12] [text-wrap:balance]"
+            className="mt-3 font-display text-3xl sm:text-4xl lg:text-[2.65rem] font-bold tracking-tight text-[#0B1320] dark:text-[#F2EFE8] leading-[1.12] [text-wrap:balance]"
           >
             <span className="line-mask">
               <span className="line-mask-inner line-mask-delay-1">
@@ -380,7 +380,7 @@ export const Skills: React.FC = () => {
           </h2>
 
           <p
-            className={`mt-4 text-sm sm:text-base text-[#4A5264] max-w-2xl leading-relaxed transition-all duration-700 ease-out ${
+            className={`mt-4 text-sm sm:text-base text-[#4A5264] dark:text-[#C7B8A6] max-w-2xl leading-relaxed transition-all duration-700 ease-out ${
               sectionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
             }`}
           >
@@ -396,9 +396,9 @@ export const Skills: React.FC = () => {
             sectionInView ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <span className="w-2 h-2 rotate-45 border border-[#B46A55] bg-[#FAF8F4] shrink-0" />
-          <div className="h-px flex-1 bg-gradient-to-r from-[#B46A55]/55 via-[#C7B8A6]/80 to-transparent" />
-          <span className="font-mono-tech text-[11px] tracking-[0.14em] text-[#4A5264] whitespace-nowrap">
+          <span className="w-2 h-2 rotate-45 border border-[#B46A55] dark:border-[#D68C76] bg-[#FAF8F4] dark:bg-[#0C1424] shrink-0" />
+          <div className="h-px flex-1 bg-gradient-to-r from-[#B46A55]/55 via-[#C7B8A6]/80 dark:via-[#2C3C5E] to-transparent" />
+          <span className="font-mono-tech text-[11px] tracking-[0.14em] text-[#4A5264] dark:text-[#C7B8A6] whitespace-nowrap">
             Core Stack Architecture
           </span>
         </div>
@@ -433,7 +433,9 @@ export const Skills: React.FC = () => {
                     cardRefs.current[cardIdx] = el;
                   }}
                   className={`skills-glass-card ${
-                    isFocus ? 'skills-glass-card--focus text-[#F2EFE8]' : 'text-[#0B1320]'
+                    isFocus
+                      ? 'skills-glass-card--focus text-[#F2EFE8]'
+                      : 'text-[#0B1320] dark:text-[#F2EFE8]'
                   } group h-full rounded-2xl overflow-hidden flex flex-col justify-between ${
                     isFocus ? 'p-6 sm:p-8' : 'p-6 sm:p-7'
                   }`}
@@ -453,7 +455,7 @@ export const Skills: React.FC = () => {
                       <div className="flex flex-wrap items-baseline justify-between gap-3">
                         <p
                           className={`font-mono-tech text-[11px] tracking-[0.14em] font-semibold ${
-                            isFocus ? 'text-[#D68C76]' : 'text-[#9A4F3A]'
+                            isFocus ? 'text-[#D68C76]' : 'text-[#9A4F3A] dark:text-[#D68C76]'
                           }`}
                         >
                           {card.indexLabel} <span aria-hidden="true">·</span> {card.roleLabel}
@@ -461,7 +463,7 @@ export const Skills: React.FC = () => {
 
                         <span
                           className={`font-mono-tech text-[11px] tabular-nums ${
-                            isFocus ? 'text-[#C7B8A6]' : 'text-[#4A5264]'
+                            isFocus ? 'text-[#C7B8A6]' : 'text-[#4A5264] dark:text-[#C7B8A6]'
                           }`}
                         >
                           {card.technologies.length}{' '}
@@ -473,7 +475,7 @@ export const Skills: React.FC = () => {
                         className={`mt-2.5 font-display font-bold tracking-tight ${
                           isFocus
                             ? 'text-2xl sm:text-[1.7rem] text-[#F2EFE8]'
-                            : 'text-xl sm:text-2xl text-[#0B1320]'
+                            : 'text-xl sm:text-2xl text-[#0B1320] dark:text-[#F2EFE8]'
                         }`}
                       >
                         {card.title}
@@ -481,7 +483,7 @@ export const Skills: React.FC = () => {
 
                       <p
                         className={`mt-2.5 text-sm leading-relaxed max-w-2xl ${
-                          isFocus ? 'text-[#DED8CE]' : 'text-[#4A5264]'
+                          isFocus ? 'text-[#DED8CE]' : 'text-[#4A5264] dark:text-[#DED8CE]'
                         }`}
                       >
                         {card.summary}
@@ -490,7 +492,7 @@ export const Skills: React.FC = () => {
                       {/* Unboxed engineering pillars */}
                       <div
                         className={`mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs font-mono-tech ${
-                          isFocus ? 'text-[#D68C76]' : 'text-[#9A4F3A]'
+                          isFocus ? 'text-[#D68C76]' : 'text-[#9A4F3A] dark:text-[#D68C76]'
                         }`}
                       >
                         {card.pillars.map((pillar, pIdx) => (
@@ -498,7 +500,11 @@ export const Skills: React.FC = () => {
                             {pIdx > 0 && (
                               <span
                                 aria-hidden="true"
-                                className={isFocus ? 'text-[#C7B8A6]/45' : 'text-[#C7B8A6]'}
+                                className={
+                                  isFocus
+                                    ? 'text-[#C7B8A6]/45'
+                                    : 'text-[#C7B8A6] dark:text-[#C7B8A6]/45'
+                                }
                               >
                                 /
                               </span>
@@ -512,20 +518,24 @@ export const Skills: React.FC = () => {
                     {/* Official Technology Stack Items inside the Glass Card */}
                     <div
                       className={`mt-6 pt-5 border-t ${
-                        isFocus ? 'border-[#C7B8A6]/20 space-y-4' : 'border-[#C7B8A6]/50 space-y-3.5'
+                        isFocus
+                          ? 'border-[#C7B8A6]/20 space-y-4'
+                          : 'border-[#C7B8A6]/50 dark:border-[#C7B8A6]/20 space-y-3.5'
                       }`}
                     >
                       {card.technologies.map((tech) => (
                         <div
                           key={`${card.id}-${tech.name}`}
                           className={`skills-tech-row group/tech pb-3 last:pb-0 border-b last:border-b-0 ${
-                            isFocus ? 'border-[#C7B8A6]/12' : 'border-[#C7B8A6]/35'
+                            isFocus
+                              ? 'border-[#C7B8A6]/12'
+                              : 'border-[#C7B8A6]/35 dark:border-[#C7B8A6]/15'
                           }`}
                         >
                           <div className="flex items-center gap-3.5 min-w-0">
                             <div
                               className={`skills-tech-chip w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                                isFocus ? 'text-[#F2EFE8]' : 'text-[#0B1320]'
+                                isFocus ? 'text-[#F2EFE8]' : 'text-[#0B1320] dark:text-[#F2EFE8]'
                               }`}
                             >
                               <TechLogo id={tech.logoId} className="w-6 h-6" />
@@ -534,14 +544,14 @@ export const Skills: React.FC = () => {
                             <div className="min-w-0">
                               <h4
                                 className={`font-display text-sm sm:text-[0.95rem] font-semibold truncate ${
-                                  isFocus ? 'text-[#F2EFE8]' : 'text-[#0B1320]'
+                                  isFocus ? 'text-[#F2EFE8]' : 'text-[#0B1320] dark:text-[#F2EFE8]'
                                 }`}
                               >
                                 {tech.name}
                               </h4>
                               <p
                                 className={`text-xs truncate sm:whitespace-normal leading-snug ${
-                                  isFocus ? 'text-[#C7B8A6]' : 'text-[#4A5264]'
+                                  isFocus ? 'text-[#C7B8A6]' : 'text-[#4A5264] dark:text-[#C7B8A6]'
                                 }`}
                               >
                                 {tech.note}
@@ -560,11 +570,11 @@ export const Skills: React.FC = () => {
 
         {/* Section Footer Text */}
         <footer
-          className={`mt-10 pt-6 border-t border-[#C7B8A6]/55 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono-tech text-[#4A5264] transition-opacity duration-700 delay-300 ${
+          className={`mt-10 pt-6 border-t border-[#C7B8A6]/55 dark:border-[#22314F] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono-tech text-[#4A5264] dark:text-[#C7B8A6] transition-opacity duration-700 delay-300 ${
             sectionInView ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <p className="text-[#9A4F3A] font-medium">
+          <p className="text-[#9A4F3A] dark:text-[#D68C76] font-medium">
             Backend engineering direction <span aria-hidden="true">·</span> Intango TSS Software
             Development
           </p>

@@ -660,13 +660,13 @@ export const CircularProjectGallery: React.FC<CircularProjectGalleryProps> = ({
               onClick={() => navigateToIndex(idx)}
               className={`min-h-[40px] px-3.5 py-2 rounded-lg font-mono-tech text-xs font-medium transition-all duration-200 cursor-pointer flex items-center gap-2 border ${
                 isCurrent
-                  ? 'bg-[#F2EFE8] text-[#0B1320] border-[#F2EFE8] shadow-sm'
+                  ? 'bg-[#F2EFE8] dark:bg-[#B46A55] text-[#0B1320] dark:text-[#F2EFE8] border-[#F2EFE8] dark:border-[#D68C76] shadow-sm'
                   : 'bg-[#0B1320] text-[#C7B8A6] border-[#C7B8A6]/30 hover:border-[#D68C76]/65 hover:text-[#F2EFE8]'
               }`}
             >
               <span
                 className={`tabular-nums font-semibold ${
-                  isCurrent ? 'text-[#9A4F3A]' : 'text-[#D68C76]'
+                  isCurrent ? 'text-[#9A4F3A] dark:text-[#F2EFE8]' : 'text-[#D68C76]'
                 }`}
               >
                 {String(idx + 1).padStart(2, '0')}

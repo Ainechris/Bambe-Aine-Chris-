@@ -8,13 +8,13 @@ interface NotFoundProps {
 
 export const NotFound: React.FC<NotFoundProps> = ({ onGoHome }) => {
   return (
-    <div className="min-h-screen bg-[#0B1320] text-[#F2EFE8] flex flex-col items-center justify-center px-5 py-16 text-center">
+    <div className="min-h-screen bg-[#F2EFE8] dark:bg-[#0B1320] text-[#0B1320] dark:text-[#F2EFE8] flex flex-col items-center justify-center px-5 py-16 text-center transition-colors duration-200">
       <BrandMark className="w-11 h-11" />
-      <p className="mt-6 font-mono-tech text-xs tracking-[0.14em] text-[#D68C76]">404 · PAGE NOT FOUND</p>
-      <h1 className="mt-3 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#F2EFE8]">
+      <p className="mt-6 font-mono-tech text-xs tracking-[0.14em] text-[#9A4F3A] dark:text-[#D68C76]">404 · PAGE NOT FOUND</p>
+      <h1 className="mt-3 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#0B1320] dark:text-[#F2EFE8]">
         This page could not be found.
       </h1>
-      <p className="mt-3 text-sm sm:text-base text-[#C7B8A6] max-w-md leading-relaxed">
+      <p className="mt-3 text-sm sm:text-base text-[#4A5264] dark:text-[#C7B8A6] max-w-md leading-relaxed">
         The link may be outdated or mistyped. Return to BAMBE Aine Chris&apos;s main portfolio to
         explore projects, skills, and contact details.
       </p>

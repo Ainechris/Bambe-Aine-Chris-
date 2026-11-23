@@ -85,7 +85,7 @@ export const TechLogo: React.FC<{ id: TechLogoId; className?: string }> = ({
         <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
           <path
             d="M15.2 18.6C14.3 20.7 12.6 22 10.2 22C7 22 4.6 19.5 4.6 15.8C4.6 12.1 7 9.6 10.1 9.6C13.3 9.6 15.4 11.9 15.4 15.5V16.3H6.5C6.7 18.7 8.1 20.2 10.3 20.2C11.9 20.2 13.1 19.4 13.8 17.9L15.2 18.6ZM6.6 14.7H13.5C13.3 12.4 11.9 11.2 10.1 11.2C8.2 11.2 6.9 12.5 6.6 14.7Z"
-            fill="#F2EFE8"
+            fill="currentColor"
           />
           <path
             d="M17.4 10H19.6L22.5 14.6L25.4 10H27.5L23.6 15.9L27.8 21.8H25.5L22.4 17.1L19.3 21.8H17.1L21.3 15.9L17.4 10Z"
@@ -154,7 +154,7 @@ export const TechLogo: React.FC<{ id: TechLogoId; className?: string }> = ({
           <ellipse cx="16" cy="8.5" rx="9" ry="3.2" fill="#1F2A44" stroke="#D68C76" strokeWidth="1.4" />
           <path
             d="M7 8.5V22.5C7 24.3 11 25.7 16 25.7C21 25.7 25 24.3 25 22.5V8.5"
-            stroke="#0B1320"
+            stroke="currentColor"
             strokeWidth="1.5"
             fill="none"
           />

@@ -10,10 +10,12 @@ import {
   ADMIN_ROUTE_META,
   PERSON_IDENTITY,
   PUBLIC_ROUTES,
+  SITE_KEYWORDS,
   buildJsonLdGraph,
   buildProjectJsonLdGraph,
   findPublicRoute,
   normalizePathname,
+  resolveAbsoluteAssetUrl,
 } from './src/seo/routes.ts';
 
 dotenv.config();
@@ -801,6 +803,8 @@ function injectSeoMetadata(html: string, req: Request): { html: string; statusCo
   let statusCode = 200;
   let title = PUBLIC_ROUTES[0].title;
   let description = PUBLIC_ROUTES[0].description;
+  let keywords = PUBLIC_ROUTES[0].keywords;
+  let ogType: string = PUBLIC_ROUTES[0].ogType;
   let robots = 'index, follow';
   let canonicalUrl = `${origin}${normalized === '/' ? '' : normalized}` || origin;
   let effectiveOgImage = ogImageUrl;
@@ -809,6 +813,7 @@ function injectSeoMetadata(html: string, req: Request): { html: string; statusCo
   if (normalized === '/admin') {
     title = ADMIN_ROUTE_META.title;
     description = ADMIN_ROUTE_META.description;
+    ogType = 'website';
     robots = 'noindex, nofollow, noarchive';
     canonicalUrl = `${origin}/admin`;
   } else if (normalized.startsWith('/work/') && normalized.length > '/work/'.length) {
@@ -825,15 +830,22 @@ function injectSeoMetadata(html: string, req: Request): { html: string; statusCo
       const formatted = formatProject(projectRow);
       title = `${formatted.title} — Software Project | BAMBE Aine Chris`;
       description = formatted.description.slice(0, 160);
+      keywords = [
+        formatted.title,
+        ...formatted.technologies,
+        'BAMBE Aine Chris',
+        'Ainechris',
+        'Software Project',
+      ].join(', ');
+      ogType = 'article';
       canonicalUrl = `${origin}/work/${encodeURIComponent(formatted.slug)}`;
-      if (formatted.imageUrl) {
-        effectiveOgImage = `${origin}${formatted.imageUrl}`;
-      }
+      effectiveOgImage = resolveAbsoluteAssetUrl(origin, formatted.imageUrl);
       jsonLdGraph = buildProjectJsonLdGraph(origin, formatted);
     } else {
       statusCode = 404;
       title = 'Project Not Found | BAMBE Aine Chris';
       description = 'The requested software project could not be found.';
+      ogType = 'website';
       robots = 'noindex, nofollow';
     }
   } else {
@@ -841,24 +853,27 @@ function injectSeoMetadata(html: string, req: Request): { html: string; statusCo
     if (matched) {
       title = matched.title;
       description = matched.description;
+      keywords = matched.keywords;
+      ogType = matched.ogType;
       jsonLdGraph = buildJsonLdGraph(origin, normalized);
     } else {
       statusCode = 404;
       title = 'Page Not Found | BAMBE Aine Chris';
       description = 'Requested page could not be found on BAMBE Aine Chris portfolio.';
+      keywords = SITE_KEYWORDS;
+      ogType = 'website';
       robots = 'noindex, nofollow';
     }
   }
 
   const safeTitle = escapeHtmlAttr(title);
   const safeDesc = escapeHtmlAttr(description);
+  const safeKeywords = escapeHtmlAttr(keywords);
   const safeCanonical = escapeHtmlAttr(canonicalUrl);
   const safeOgImage = escapeHtmlAttr(effectiveOgImage);
+  const safeOgType = escapeHtmlAttr(ogType);
 
-  const extraHeadTags: string[] = [
-    `<link rel="canonical" href="${safeCanonical}" />`,
-  ];
-
+  const extraHeadTags: string[] = [];
   const googleVerify = process.env.GOOGLE_SITE_VERIFICATION?.trim();
   if (googleVerify) {
     extraHeadTags.push(
@@ -870,24 +885,34 @@ function injectSeoMetadata(html: string, req: Request): { html: string; statusCo
     extraHeadTags.push(`<meta name="msvalidate.01" content="${escapeHtmlAttr(bingVerify)}" />`);
   }
 
-  if (jsonLdGraph) {
-    extraHeadTags.push(
-      `<script type="application/ld+json">${JSON.stringify(jsonLdGraph).replace(
+  const jsonLdScript = jsonLdGraph
+    ? `<script id="structured-data" type="application/ld+json">${JSON.stringify(jsonLdGraph).replace(
         /</g,
         '\\u003c',
-      )}</script>`,
-    );
-  }
+      )}</script>`
+    : '';
 
-  const out = html
+  let out = html
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${safeTitle}</title>`)
     .replace(
       /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/i,
       `<meta name="description" content="${safeDesc}" />`,
     )
     .replace(
+      /<meta\s+name="keywords"\s+content="[^"]*"\s*\/?>/i,
+      `<meta name="keywords" content="${safeKeywords}" />`,
+    )
+    .replace(
       /<meta\s+name="robots"\s+content="[^"]*"\s*\/?>/i,
       `<meta name="robots" content="${robots}" />`,
+    )
+    .replace(
+      /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/i,
+      `<link rel="canonical" href="${safeCanonical}" />`,
+    )
+    .replace(
+      /<meta\s+property="og:type"\s+content="[^"]*"\s*\/?>/i,
+      `<meta property="og:type" content="${safeOgType}" />`,
     )
     .replace(
       /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/i,
@@ -906,6 +931,10 @@ function injectSeoMetadata(html: string, req: Request): { html: string; statusCo
       `<meta property="og:image" content="${safeOgImage}" />`,
     )
     .replace(
+      /<meta\s+name="twitter:url"\s+content="[^"]*"\s*\/?>/i,
+      `<meta name="twitter:url" content="${safeCanonical}" />`,
+    )
+    .replace(
       /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/i,
       `<meta name="twitter:title" content="${safeTitle}" />`,
     )
@@ -917,7 +946,17 @@ function injectSeoMetadata(html: string, req: Request): { html: string; statusCo
       /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/i,
       `<meta name="twitter:image" content="${safeOgImage}" />`,
     )
-    .replace('</head>', `    ${extraHeadTags.join('\n    ')}\n  </head>`);
+    .replace(/<script\s+id="structured-data"\s+type="application\/ld\+json">[\s\S]*?<\/script>/i, jsonLdScript);
+
+  if (!/<link\s+rel="canonical"/i.test(out)) {
+    extraHeadTags.push(`<link rel="canonical" href="${safeCanonical}" />`);
+  }
+  if (jsonLdScript && !/<script\s+id="structured-data"/i.test(out)) {
+    extraHeadTags.push(jsonLdScript);
+  }
+  if (extraHeadTags.length > 0) {
+    out = out.replace('</head>', `    ${extraHeadTags.join('\n    ')}\n  </head>`);
+  }
 
   return { html: out, statusCode };
 }
@@ -970,21 +1009,23 @@ async function startServer() {
     });
 
     const publishedProjects = db
-      .prepare("SELECT id, slug, updated_at FROM projects WHERE visibility = 'published'")
-      .all() as Array<{ id: string; slug: string | null; updated_at: string }>;
+      .prepare("SELECT id, title, slug, updated_at FROM projects WHERE visibility = 'published'")
+      .all() as Array<{ id: string; title: string; slug: string | null; updated_at: string }>;
 
-    const projectUrls = publishedProjects.map((proj) => {
-      const loc = `${origin}/work/${encodeURIComponent(proj.slug || proj.id)}`;
-      const lastmod = proj.updated_at ? proj.updated_at.slice(0, 10) : today;
-      return [
-        '  <url>',
-        `    <loc>${escapeHtmlAttr(loc)}</loc>`,
-        `    <lastmod>${lastmod}</lastmod>`,
-        '    <changefreq>monthly</changefreq>',
-        '    <priority>0.8</priority>',
-        '  </url>',
-      ].join('\n');
-    });
+    const projectUrls = publishedProjects
+      .filter((proj) => !/voice[-_ ]?helper/i.test(proj.title || '') && !/voice[-_ ]?helper/i.test(proj.slug || ''))
+      .map((proj) => {
+        const loc = `${origin}/work/${encodeURIComponent(proj.slug || proj.id)}`;
+        const lastmod = proj.updated_at ? proj.updated_at.slice(0, 10) : today;
+        return [
+          '  <url>',
+          `    <loc>${escapeHtmlAttr(loc)}</loc>`,
+          `    <lastmod>${lastmod}</lastmod>`,
+          '    <changefreq>monthly</changefreq>',
+          '    <priority>0.8</priority>',
+          '  </url>',
+        ].join('\n');
+      });
 
     const xml = [
       '<?xml version="1.0" encoding="UTF-8"?>',
