@@ -463,15 +463,439 @@
   background: rgba(31, 42, 68, 0.96);
 }
 
+/* ================= ADMIN AUTH GLASSMORPHISM & SPOTLIGHT ================= */
+
+@keyframes authHeaderIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes authOrbitIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+@keyframes authOrbitSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes authCardEnter {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) translate3d(0, 26px, 0) scale(0.968);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes authFormRise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes authErrorShake {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  25% {
+    opacity: 1;
+    transform: translate3d(-5px, 0, 0);
+  }
+  50% {
+    transform: translate3d(4px, 0, 0);
+  }
+  75% {
+    transform: translate3d(-3px, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.admin-auth-header-enter {
+  animation: authHeaderIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.admin-auth-orbit-enter {
+  animation: authOrbitIn 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+
+.admin-auth-orbit-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: authOrbitSpin 54s linear infinite;
+}
+
+.admin-auth-card-enter {
+  animation: authCardEnter 0.78s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
+}
+
+.admin-auth-form-step-1 {
+  animation: authFormRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both;
+}
+
+.admin-auth-form-step-2 {
+  animation: authFormRise 0.54s cubic-bezier(0.16, 1, 0.3, 1) 0.11s both;
+}
+
+.admin-auth-form-step-3 {
+  animation: authFormRise 0.54s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+.admin-auth-form-step-4 {
+  animation: authFormRise 0.54s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.admin-auth-error-enter {
+  animation: authErrorShake 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.admin-auth-stage {
+  --auth-mx: 50%;
+  --auth-my: 40%;
+  --auth-opacity: 0;
+  background-color: var(--midnight-ink);
+  background-image:
+    radial-gradient(58% 52% at 14% 18%, rgba(31, 42, 68, 0.72) 0%, transparent 72%),
+    radial-gradient(48% 46% at 86% 84%, rgba(180, 106, 85, 0.16) 0%, transparent 74%),
+    radial-gradient(40% 36% at 55% 45%, rgba(199, 184, 166, 0.05) 0%, transparent 76%);
+}
+
+.admin-auth-grid {
+  background-image:
+    linear-gradient(to right, rgba(199, 184, 166, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(199, 184, 166, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 35%, transparent 100%);
+}
+
+.admin-auth-cursor-light {
+  opacity: var(--auth-opacity);
+  background:
+    radial-gradient(
+      240px circle at var(--auth-mx) var(--auth-my),
+      rgba(214, 140, 118, 0.16),
+      rgba(199, 184, 166, 0.06) 45%,
+      transparent 78%
+    ),
+    radial-gradient(
+      560px circle at var(--auth-mx) var(--auth-my),
+      rgba(31, 42, 68, 0.45),
+      transparent 75%
+    );
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.admin-auth-glass-card {
+  --card-mx: 50%;
+  --card-my: 25%;
+  --card-prox: 0;
+  --card-rx: 0deg;
+  --card-ry: 0deg;
+  transform: perspective(1200px) rotateX(var(--card-rx)) rotateY(var(--card-ry));
+  transform-style: preserve-3d;
+  background: linear-gradient(
+    148deg,
+    rgba(31, 42, 68, 0.62) 0%,
+    rgba(16, 25, 42, 0.78) 54%,
+    rgba(11, 19, 32, 0.88) 100%
+  );
+  border: 1px solid rgba(199, 184, 166, 0.24);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 239, 232, 0.16),
+    inset 0 -1px 0 rgba(7, 12, 22, 0.55),
+    0 32px 64px -26px rgba(5, 9, 16, 0.75);
+  transition:
+    transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.admin-auth-glass-card:focus-within {
+  border-color: rgba(214, 140, 118, 0.48);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 239, 232, 0.2),
+    inset 0 -1px 0 rgba(7, 12, 22, 0.55),
+    0 36px 72px -24px rgba(5, 9, 16, 0.82);
+}
+
+.admin-auth-glass-reflection {
+  opacity: calc(var(--card-prox) * 0.85);
+  background: radial-gradient(
+    420px circle at var(--card-mx) var(--card-my),
+    rgba(242, 239, 232, 0.08),
+    rgba(214, 140, 118, 0.06) 42%,
+    transparent 72%
+  );
+  transition: opacity 0.35s ease;
+}
+
+.admin-auth-glass-edge {
+  padding: 1px;
+  opacity: var(--card-prox);
+  background: radial-gradient(
+    340px circle at var(--card-mx) var(--card-my),
+    rgba(214, 140, 118, 0.75),
+    rgba(199, 184, 166, 0.35) 42%,
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.35s ease;
+}
+
+.admin-auth-submit-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-auth-submit-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 80%
+  );
+  transform: translate3d(-120%, 0, 0);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.admin-auth-submit-btn:hover::after,
+.admin-auth-submit-btn:focus-visible::after {
+  transform: translate3d(120%, 0, 0);
+}
+
+/* ================= INTERACTIVE CONTACT FORM TRANSITIONS ================= */
+
+@keyframes contactPanelEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.978);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes contactFieldRise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes contactCheckPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.65) rotate(-8deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.08) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes contactCountdownShrink {
+  0% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+.contact-idle-enter {
+  animation: contactPanelEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.contact-form-enter {
+  animation: contactPanelEnter 0.56s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.contact-field-step-1 {
+  animation: contactFieldRise 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+}
+
+.contact-field-step-2 {
+  animation: contactFieldRise 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+.contact-field-step-3 {
+  animation: contactFieldRise 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+.contact-field-step-4 {
+  animation: contactFieldRise 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both;
+}
+
+.contact-thankyou-enter {
+  animation: contactPanelEnter 0.54s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.contact-check-pop {
+  animation: contactCheckPop 0.58s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+.contact-countdown-bar {
+  transform-origin: left center;
+  animation: contactCountdownShrink 4s linear both;
+}
+
+.contact-glass-card {
+  --card-mx: 50%;
+  --card-my: 25%;
+  --card-prox: 0;
+  background: linear-gradient(
+    148deg,
+    rgba(22, 33, 56, 0.56) 0%,
+    rgba(11, 19, 32, 0.68) 54%,
+    rgba(9, 16, 28, 0.78) 100%
+  );
+  border: 1px solid rgba(199, 184, 166, 0.28);
+  backdrop-filter: blur(24px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 239, 232, 0.2),
+    inset 0 -1px 0 rgba(7, 12, 22, 0.55),
+    0 28px 60px -24px rgba(4, 8, 16, 0.72);
+  transition:
+    border-color 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-glass-card:focus-within {
+  border-color: rgba(214, 140, 118, 0.48);
+}
+
+.contact-glass-reflection {
+  opacity: calc(var(--card-prox) * 0.9);
+  background: radial-gradient(
+    460px circle at var(--card-mx) var(--card-my),
+    rgba(242, 239, 232, 0.095),
+    rgba(214, 140, 118, 0.065) 42%,
+    transparent 72%
+  );
+  transition: opacity 0.35s ease;
+}
+
+.contact-glass-edge {
+  padding: 1px;
+  opacity: var(--card-prox);
+  background: radial-gradient(
+    360px circle at var(--card-mx) var(--card-my),
+    rgba(214, 140, 118, 0.78),
+    rgba(199, 184, 166, 0.38) 42%,
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.35s ease;
+}
+
+.contact-glass-field {
+  background: linear-gradient(
+    160deg,
+    rgba(242, 239, 232, 0.085) 0%,
+    rgba(31, 42, 68, 0.34) 100%
+  );
+  border: 1px solid rgba(199, 184, 166, 0.26);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 239, 232, 0.12),
+    inset 0 -1px 0 rgba(7, 12, 22, 0.35);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.contact-glass-field:focus,
+.contact-glass-field:focus-within {
+  background: linear-gradient(
+    160deg,
+    rgba(242, 239, 232, 0.11) 0%,
+    rgba(11, 19, 32, 0.52) 100%
+  );
+  border-color: rgba(214, 140, 118, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 239, 232, 0.16),
+    0 0 0 3px rgba(214, 140, 118, 0.14);
+}
+
 @media (hover: none), (pointer: coarse) {
   .skills-cursor-light,
   .skills-glass-reflection,
-  .skills-glass-edge {
+  .skills-glass-edge,
+  .admin-auth-cursor-light,
+  .admin-auth-glass-reflection,
+  .admin-auth-glass-edge,
+  .contact-glass-reflection,
+  .contact-glass-edge {
     display: none;
   }
 
   .skills-glass-card:hover {
     transform: none;
+  }
+
+  .admin-auth-glass-card {
+    transform: none !important;
   }
 }
 
@@ -490,10 +914,29 @@
   .scroll-cue-bar,
   .deck-float-a,
   .deck-float-b,
-  .deck-float-c {
+  .deck-float-c,
+  .admin-auth-header-enter,
+  .admin-auth-orbit-enter,
+  .admin-auth-orbit-spin,
+  .admin-auth-card-enter,
+  .admin-auth-form-step-1,
+  .admin-auth-form-step-2,
+  .admin-auth-form-step-3,
+  .admin-auth-form-step-4,
+  .admin-auth-error-enter,
+  .contact-idle-enter,
+  .contact-form-enter,
+  .contact-field-step-1,
+  .contact-field-step-2,
+  .contact-field-step-3,
+  .contact-field-step-4,
+  .contact-thankyou-enter,
+  .contact-check-pop,
+  .contact-countdown-bar {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
   }
 
   .reveal-base,
@@ -530,14 +973,25 @@
 
   .skills-cursor-light,
   .skills-glass-reflection,
-  .skills-glass-edge {
+  .skills-glass-edge,
+  .admin-auth-cursor-light,
+  .admin-auth-glass-reflection,
+  .admin-auth-glass-edge,
+  .contact-glass-reflection,
+  .contact-glass-edge {
     display: none !important;
   }
 
   .skills-glass-card,
   .skills-tech-chip,
-  .skills-parallax-layer {
+  .skills-parallax-layer,
+  .admin-auth-glass-card,
+  .contact-glass-card {
     transform: none !important;
     transition: border-color 0.15s ease !important;
+  }
+
+  .admin-auth-submit-btn::after {
+    display: none !important;
   }
 }

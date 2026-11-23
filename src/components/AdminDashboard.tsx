@@ -8,7 +8,6 @@ import {
   Eye,
   FileText,
   FolderGit2,
-  Lock,
   LogOut,
   Mail,
   MailOpen,
@@ -31,6 +30,7 @@ import {
   formatFileSize,
   isSafeHttpUrl,
 } from '../types/portfolio.ts';
+import { AdminAuthScreen } from './AdminAuthScreen.tsx';
 import { BrandMark } from './BrandMark.tsx';
 
 export type AdminTab = 'projects' | 'certificates' | 'messages';
@@ -884,6 +884,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const publishedProjectsCount = projects.filter((p) => p.visibility === 'published').length;
 
+  if (authStatus.loading || !authStatus.authenticated) {
+    return (
+      <AdminAuthScreen
+        loading={authStatus.loading}
+        configured={authStatus.configured}
+        password={password}
+        confirmPassword={confirmPassword}
+        authError={authError}
+        authSubmitting={authSubmitting}
+        onPasswordChange={setPassword}
+        onConfirmPasswordChange={setConfirmPassword}
+        onSubmit={handleAuthSubmit}
+        onBackToPortfolio={onBackToPortfolio}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#0A0D0F] text-[#F2EFE9]">
       {/* Dashboard Top Bar */}
@@ -920,88 +937,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       </header>
 
       <main className="max-w-[1220px] mx-auto px-5 sm:px-8 py-12">
-        {authStatus.loading ? (
-          <div className="max-w-md mx-auto mt-12 rounded-2xl bg-[#11171A] border border-[rgba(242,239,233,0.1)] p-8 text-center text-sm text-[#8C989B]">
-            Checking administrator session...
-          </div>
-        ) : !authStatus.authenticated ? (
-          <div className="max-w-md mx-auto mt-10 rounded-2xl bg-[#11171A] border border-[rgba(242,239,233,0.12)] p-7 sm:p-8">
-            <div className="w-11 h-11 rounded-xl bg-[#162126] border border-[#4DB6AC]/30 flex items-center justify-center">
-              <Lock className="w-5 h-5 text-[#4DB6AC]" aria-hidden="true" />
-            </div>
-
-            <h1 className="mt-5 font-display text-2xl font-bold tracking-tight text-[#F2EFE9]">
-              {authStatus.configured ? 'Admin Sign In' : 'Claim Admin Password'}
-            </h1>
-            <p className="mt-2 text-sm text-[#8C989B] leading-relaxed">
-              {authStatus.configured
-                ? 'Sign in to manage projects, certificates, and contact messages.'
-                : 'Set your private administrator password to unlock your portfolio CMS.'}
-            </p>
-
-            <form onSubmit={handleAuthSubmit} className="mt-6 space-y-4">
-              <div>
-                <label
-                  htmlFor="admin-password"
-                  className="block text-xs font-medium text-[#CBC6BC] mb-1.5"
-                >
-                  {authStatus.configured ? 'Admin Password' : 'New Admin Password'}
-                </label>
-                <input
-                  id="admin-password"
-                  type="password"
-                  required
-                  minLength={authStatus.configured ? 1 : 8}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                  className="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-[#0A0D0F] border border-[rgba(242,239,233,0.16)] focus:border-[#4DB6AC] focus:outline-none text-sm text-[#F2EFE9]"
-                />
-              </div>
-
-              {!authStatus.configured && (
-                <div>
-                  <label
-                    htmlFor="admin-password-confirm"
-                    className="block text-xs font-medium text-[#CBC6BC] mb-1.5"
-                  >
-                    Confirm Password
-                  </label>
-                  <input
-                    id="admin-password-confirm"
-                    type="password"
-                    required
-                    minLength={8}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Repeat password (8+ characters)"
-                    className="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-[#0A0D0F] border border-[rgba(242,239,233,0.16)] focus:border-[#4DB6AC] focus:outline-none text-sm text-[#F2EFE9]"
-                  />
-                </div>
-              )}
-
-              {authError && (
-                <p role="alert" className="text-xs font-medium text-[#F87171]">
-                  {authError}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={authSubmitting}
-                className="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-[#4DB6AC] hover:bg-[#5EC4BA] disabled:opacity-50 text-[#071618] text-sm font-semibold transition-colors cursor-pointer"
-              >
-                {authSubmitting
-                  ? 'Please wait...'
-                  : authStatus.configured
-                    ? 'Sign In'
-                    : 'Save Password & Continue'}
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div>
-            {/* Dashboard Header & Tabs */}
+        <div>
+          {/* Dashboard Header & Tabs */}
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
               <div>
                 <p className="font-mono-tech text-xs tracking-[0.14em] text-[#4DB6AC]">
@@ -1602,7 +1539,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
             )}
           </div>
-        )}
       </main>
 
       {/* ================= ADD / EDIT PROJECT MODAL ================= */}
