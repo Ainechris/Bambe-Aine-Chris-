@@ -1,215 +1,275 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Lenis from 'lenis';
-import type { Profile, Project, RoutePath, Video } from './types/portfolio.ts';
-import { Navbar } from './components/Navbar.tsx';
-import { Footer } from './components/Footer.tsx';
-import { PlanetBackground } from './components/PlanetBackground.tsx';
-import { HomePage } from './pages/HomePage.tsx';
-import { AboutPage } from './pages/AboutPage.tsx';
-import { SkillsPage } from './pages/SkillsPage.tsx';
-import { ProjectsPage } from './pages/ProjectsPage.tsx';
-import { YouTubePage } from './pages/YouTubePage.tsx';
-import { ContactPage } from './pages/ContactPage.tsx';
-import { AdminPage } from './pages/AdminPage.tsx';
+import { useCallback, useEffect, useState } from 'react';
+import { About } from './components/About.tsx';
+import { AdminDashboard, type AdminTab } from './components/AdminDashboard.tsx';
+import { CertificatesSection } from './components/CertificatesSection.tsx';
+import { ContactFooter } from './components/ContactFooter.tsx';
+import { Header, type NavSection } from './components/Header.tsx';
+import { Hero } from './components/Hero.tsx';
+import { NotFound } from './components/NotFound.tsx';
+import { Process } from './components/Process.tsx';
+import { ProjectDetail } from './components/ProjectDetail.tsx';
+import { Projects } from './components/Projects.tsx';
+import { Skills } from './components/Skills.tsx';
+import {
+  ADMIN_ROUTE_META,
+  PUBLIC_ROUTES,
+  findPublicRoute,
+  normalizePathname,
+} from './seo/routes.ts';
 
-const FALLBACK_PROFILE: Profile = {
-  id: 1,
-  fullName: 'Bambe Aine Chris',
-  brandName: 'Bambe Aine Chris',
-  title: 'STUDENT SOFTWARE DEVELOPER · ASPIRING BACKEND DEVELOPER',
-  direction: 'BACKEND DEVELOPMENT · SOFTWARE ENGINEERING · WEB SYSTEMS',
-  education: 'Intango TSS — L4 SOD (Software Development), Busanza, Nyarutarama, Rwanda (CLA)',
-  introShort:
-    "I'm a Student Software Developer at Intango TSS (L4 SOD) working toward becoming a Backend Developer. I build practical web software including SAMS and REST APIs.",
-  introLong:
-    "I’m Bambe Aine Chris, a Student Software Developer at Intango TSS (L4 SOD) in Busanza, Nyarutarama, Rwanda, focused on building a career in backend development. Through coursework and practical projects like SAMS, Express.js APIs, and relational database modeling, I explore how server-side logic and clean interfaces work together reliably.",
-  email: 'ainechrisb@gmail.com',
-  githubUrl: 'https://github.com/Ainechris',
-  youtubeUrl: 'https://www.youtube.com/@VazukoYT',
-  instagramUrl: 'https://www.instagram.com/__aine_.23/',
-  tiktokUrl: '',
-  updatedAt: '',
-};
+type AppView =
+  | { kind: 'portfolio'; section: NavSection }
+  | { kind: 'project-detail'; slug: string }
+  | { kind: 'admin' }
+  | { kind: 'not-found' };
 
-const VALID_PATHS = new Set<RoutePath>([
-  '/',
-  '/about',
-  '/skills',
-  '/projects',
-  '/youtube',
-  '/contact',
-  '/admin',
-]);
+function resolvePathToView(pathname: string): AppView {
+  const normalized = normalizePathname(pathname);
+  if (normalized === '/admin') {
+    return { kind: 'admin' };
+  }
+  if (normalized.startsWith('/work/') && normalized.length > '/work/'.length) {
+    const slug = decodeURIComponent(normalized.slice('/work/'.length));
+    if (slug && !slug.includes('/')) {
+      return { kind: 'project-detail', slug };
+    }
+  }
+  const route = findPublicRoute(normalized);
+  if (route) {
+    return { kind: 'portfolio', section: route.sectionId };
+  }
+  return { kind: 'not-found' };
+}
 
-function normalizePath(pathname: string): RoutePath {
-  const clean = pathname.replace(/\/+$/, '') || '/';
-  return VALID_PATHS.has(clean as RoutePath) ? (clean as RoutePath) : '/';
+function updateDocumentHead(pathname: string) {
+  const normalized = normalizePathname(pathname);
+  const origin = window.location.origin;
+  const canonicalUrl = `${origin}${normalized === '/' ? '' : normalized}` || origin;
+
+  let title = PUBLIC_ROUTES[0].title;
+  let description = PUBLIC_ROUTES[0].description;
+  let robots = 'index, follow';
+
+  if (normalized === '/admin') {
+    title = ADMIN_ROUTE_META.title;
+    description = ADMIN_ROUTE_META.description;
+    robots = 'noindex, nofollow, noarchive';
+  } else if (normalized.startsWith('/work/') && normalized.length > '/work/'.length) {
+    const slugLabel = decodeURIComponent(normalized.slice('/work/'.length)).replace(/-/g, ' ');
+    title = `${slugLabel} — Software Project | BAMBE Aine Chris`;
+    description = 'Detailed software project showcase and engineering breakdown by BAMBE Aine Chris.';
+  } else {
+    const matched = findPublicRoute(normalized);
+    if (matched) {
+      title = matched.title;
+      description = matched.description;
+    } else {
+      title = 'Page Not Found | BAMBE Aine Chris';
+      description = 'Requested page could not be found on BAMBE Aine Chris portfolio.';
+      robots = 'noindex, nofollow';
+    }
+  }
+
+  document.title = title;
+
+  const setMeta = (selector: string, content: string) => {
+    const el = document.querySelector<HTMLMetaElement>(selector);
+    if (el) el.setAttribute('content', content);
+  };
+
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[name="robots"]', robots);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[property="og:url"]', canonicalUrl);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', description);
+
+  let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (!canonicalLink) {
+    canonicalLink = document.createElement('link');
+    canonicalLink.setAttribute('rel', 'canonical');
+    document.head.appendChild(canonicalLink);
+  }
+  canonicalLink.setAttribute('href', canonicalUrl);
 }
 
 export default function App() {
-  const [currentPath, setCurrentPath] = useState<RoutePath>(() =>
-    normalizePath(window.location.pathname)
-  );
-  const [profile, setProfile] = useState<Profile>(FALLBACK_PROFILE);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [videos, setVideos] = useState<Video[]>([]);
-  const lenisRef = useRef<Lenis | null>(null);
+  const [view, setView] = useState<AppView>(() => resolvePathToView(window.location.pathname));
+  const [activeSection, setActiveSection] = useState<NavSection>(() => {
+    const initial = resolvePathToView(window.location.pathname);
+    if (initial.kind === 'project-detail') return 'work';
+    return initial.kind === 'portfolio' ? initial.section : 'home';
+  });
+  const [adminInitialTab, setAdminInitialTab] = useState<AdminTab>('projects');
+  const [adminToken, setAdminToken] = useState<string | null>(null);
+  const [dataRefreshKey, setDataRefreshKey] = useState(0);
 
-  const loadPortfolioData = useCallback(async () => {
-    try {
-      const [profRes, projRes, vidRes] = await Promise.all([
-        fetch('/api/profile'),
-        fetch('/api/projects'),
-        fetch('/api/videos'),
-      ]);
-      if (profRes.ok) setProfile((await profRes.json()) as Profile);
-      if (projRes.ok) setProjects((await projRes.json()) as Project[]);
-      if (vidRes.ok) setVideos((await vidRes.json()) as Video[]);
-    } catch {
-      // Keep fallback profile if API temporarily unreachable
-    }
-  }, []);
-
+  // Sync browser back/forward navigation
   useEffect(() => {
-    loadPortfolioData();
-  }, [loadPortfolioData]);
+    updateDocumentHead(window.location.pathname);
 
-  // Lenis smooth scrolling
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-
-    const lenis = new Lenis({
-      duration: 1.15,
-      smoothWheel: true,
-      touchMultiplier: 1.5,
-    });
-    lenisRef.current = lenis;
-
-    let rafId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    };
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-      lenisRef.current = null;
-    };
-  }, []);
-
-  // Staggered IntersectionObserver for [data-reveal] elements across pages & loaded items
-  useEffect(() => {
-    const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
-    if (nodes.length === 0) return;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || !('IntersectionObserver' in window)) {
-      nodes.forEach((el) => el.classList.add('in'));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-            observer.unobserve(entry.target);
+    const onPopState = () => {
+      const next = resolvePathToView(window.location.pathname);
+      setView(next);
+      updateDocumentHead(window.location.pathname);
+      if (next.kind === 'project-detail') {
+        setActiveSection('work');
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      } else if (next.kind === 'portfolio') {
+        setActiveSection(next.section);
+        window.requestAnimationFrame(() => {
+          if (next.section === 'home') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            document.getElementById(next.section)?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
           }
         });
-      },
-      { threshold: 0.08, rootMargin: '0px 0px -4% 0px' }
-    );
-
-    nodes.forEach((el) => {
-      if (!el.classList.contains('in')) {
-        observer.observe(el);
       }
-    });
-
-    return () => observer.disconnect();
-  }, [currentPath, projects.length, videos.length]);
-
-  useEffect(() => {
-    const onPopState = () => {
-      setCurrentPath(normalizePath(window.location.pathname));
     };
+
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  const [scrolledPastHero, setScrolledPastHero] = useState(false);
-
+  // Scroll to initial section if user landed directly on /work, /about, /skills, etc.
   useEffect(() => {
-    const onScroll = () => {
-      setScrolledPastHero(window.scrollY > window.innerHeight * 0.72);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    if (view.kind === 'portfolio' && view.section !== 'home') {
+      const targetId = view.section;
+      const timer = window.setTimeout(() => {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }, 60);
+      return () => window.clearTimeout(timer);
+    }
+    return undefined;
+    // Run only on initial mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const navigate = useCallback((path: RoutePath) => {
-    if (window.location.pathname !== path) {
-      window.history.pushState({}, '', path);
+  // Scroll-spy to highlight active navigation section while browsing
+  useEffect(() => {
+    if (view.kind !== 'portfolio' || typeof IntersectionObserver === 'undefined') {
+      return undefined;
     }
-    setCurrentPath(path);
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(0, { immediate: true });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+
+    const sectionIds: NavSection[] = ['home', 'about', 'work', 'skills', 'contact'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.id as NavSection;
+            if (sectionIds.includes(id)) {
+              setActiveSection(id);
+            }
+          }
+        }
+      },
+      { rootMargin: '-35% 0px -50% 0px', threshold: 0.05 },
+    );
+
+    for (const id of sectionIds) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
     }
+
+    return () => observer.disconnect();
+  }, [view.kind]);
+
+  const navigateToSection = useCallback((section: NavSection) => {
+    const matched = PUBLIC_ROUTES.find((r) => r.sectionId === section) ?? PUBLIC_ROUTES[0];
+    if (normalizePathname(window.location.pathname) !== matched.path) {
+      window.history.pushState(null, '', matched.path);
+    }
+    updateDocumentHead(matched.path);
+    setView({ kind: 'portfolio', section });
+    setActiveSection(section);
+
+    window.requestAnimationFrame(() => {
+      if (section === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        document.getElementById(section)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   }, []);
 
-  const showFloatingHeader = currentPath !== '/' || scrolledPastHero;
+  const navigateToProject = useCallback((slug: string) => {
+    const targetPath = `/work/${encodeURIComponent(slug)}`;
+    if (normalizePathname(window.location.pathname) !== targetPath) {
+      window.history.pushState(null, '', targetPath);
+    }
+    updateDocumentHead(targetPath);
+    setView({ kind: 'project-detail', slug });
+    setActiveSection('work');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
+  const openAdmin = useCallback((tab: AdminTab) => {
+    if (normalizePathname(window.location.pathname) !== '/admin') {
+      window.history.pushState(null, '', '/admin');
+    }
+    updateDocumentHead('/admin');
+    setAdminInitialTab(tab);
+    setView({ kind: 'admin' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
+  if (view.kind === 'admin') {
+    return (
+      <AdminDashboard
+        token={adminToken}
+        initialTab={adminInitialTab}
+        onSetToken={setAdminToken}
+        onBackToPortfolio={() => navigateToSection('home')}
+        onDataChanged={() => setDataRefreshKey((k) => k + 1)}
+      />
+    );
+  }
+
+  if (view.kind === 'not-found') {
+    return <NotFound onGoHome={() => navigateToSection('home')} />;
+  }
 
   return (
-    <div className="relative min-h-screen bg-[#04060f] text-[#f3f6ff]">
-      <PlanetBackground />
+    <div
+      id="top"
+      className="min-h-screen bg-[#F2EFE8] text-[#0B1320] flex flex-col overflow-x-clip"
+    >
+      <Header activeSection={activeSection} onSelectSection={navigateToSection} />
 
-      <div className="relative z-10 min-h-screen flex flex-col">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:rounded-full focus:bg-[#5df0a8] focus:text-[#032018] focus:text-sm focus:font-semibold"
-        >
-          Skip to main content
-        </a>
-
-        {/* Keep the exact smoked-glass nav slab header consistent across all pages and scrolled Home */}
-        {showFloatingHeader && (
-          <Navbar
-            currentPath={currentPath}
-            profile={profile}
-            onNavigate={navigate}
-            overlayFixed={currentPath === '/'}
+      <main className="flex-1">
+        {view.kind === 'project-detail' ? (
+          <ProjectDetail
+            slug={view.slug}
+            onBackToWork={() => navigateToSection('work')}
+            onSelectProject={navigateToProject}
           />
-        )}
-
-        <main id="main-content" className="flex-1">
-          {currentPath === '/' && (
-            <HomePage
-              profile={profile}
-              projects={projects}
-              videos={videos}
-              onNavigate={navigate}
+        ) : (
+          <>
+            <Hero onSelectSection={navigateToSection} />
+            <About />
+            <Process />
+            <Projects
+              refreshTrigger={dataRefreshKey}
+              onOpenAdminProjects={() => openAdmin('projects')}
+              onOpenProject={navigateToProject}
             />
-          )}
-          {currentPath === '/about' && (
-            <AboutPage profile={profile} onNavigate={navigate} />
-          )}
-          {currentPath === '/skills' && <SkillsPage onNavigate={navigate} />}
-          {currentPath === '/projects' && <ProjectsPage projects={projects} />}
-          {currentPath === '/youtube' && (
-            <YouTubePage profile={profile} videos={videos} />
-          )}
-          {currentPath === '/contact' && <ContactPage profile={profile} />}
-          {currentPath === '/admin' && <AdminPage onDataUpdated={loadPortfolioData} />}
-        </main>
+            <Skills />
+            <CertificatesSection
+              refreshTrigger={dataRefreshKey}
+              onOpenAdminCertificates={() => openAdmin('certificates')}
+            />
+          </>
+        )}
+      </main>
 
-        <Footer profile={profile} onNavigate={navigate} />
-      </div>
+      <ContactFooter
+        onSelectSection={navigateToSection}
+        onOpenAdmin={() => openAdmin('messages')}
+      />
     </div>
   );
 }
